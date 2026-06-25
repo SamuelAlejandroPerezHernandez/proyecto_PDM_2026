@@ -4,8 +4,5 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.programacionmovilprimeraapp.orionnotes.MyApp
-import com.programacionmovilprimeraapp.screens.Home.Home
-import com.programacionmovilprimeraapp.screens.LoginScreen.Login
-import com.programacionmovilprimeraapp.screens.RegisterScreen.Register
+
 

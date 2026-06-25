@@ -1,4 +1,2 @@
 package com.programacionmovilprimeraapp.orionnotes
 
-
-
