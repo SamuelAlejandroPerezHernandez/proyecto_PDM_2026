@@ -1,12 +1,17 @@
-const bcrypt = require('bcrypt'); //esto es lo que hace que se incripten las contraseñas crack
-const jwt = require('jsonwebtoken'); //esto es lo que genera los tokens crack
-const supabase = require('../config/supabase'); //esto es lo que conecta con la base de datos crack
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const supabase = require('../config/supabase');
 
 const register = async(req, res) => {
     const {email, password} = req.body;
 
     if(!email || !password){
         return res.status(400).json({message: 'Email y contraseña son requeridos'});
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailRegex.test(email)){
+        return res.status(400).json({message: 'El formato del correo electrónico no es válido'});
     }
 
     const {data: existeUsuario, error} = await supabase
