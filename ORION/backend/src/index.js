@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const authRoutes = require('./routes/auth.routes')
 const tasksRoutes = require('./routes/task.routes')
+const noteRoutes = require('./routes/note.routes')  
 const categoriesRoutes = require('./routes/categories.routes')
 require('dotenv').config()
 
@@ -19,6 +20,8 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes)
 
 app.use('/api/tasks', tasksRoutes)
+
+app.use('/api/notes', noteRoutes)
 
 app.use('/api/categories', categoriesRoutes)
 

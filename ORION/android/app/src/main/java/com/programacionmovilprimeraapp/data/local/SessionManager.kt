@@ -4,16 +4,16 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-
+// pide permiso para crear un archivo fisico
 class SessionManager private constructor(AuthContext: Context){
 
-
+    // crea la llave para ese archivo
     private val masterKey = MasterKey.Builder(AuthContext)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
 
-
+    // crea ese archivo
     private val sharedPreferences = EncryptedSharedPreferences.create(
         AuthContext.applicationContext,
         "security_user_data",
@@ -22,7 +22,7 @@ class SessionManager private constructor(AuthContext: Context){
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
-
+    // crea el nombre de la columna de la tabla
     companion object{
         private const val TOKEN_KEY = "JWT_TOKEN"
 
@@ -36,7 +36,7 @@ class SessionManager private constructor(AuthContext: Context){
         }
     }
 
-
+    // guarda y encripta el token
     fun saveToken(token: String){
         sharedPreferences.edit().putString(TOKEN_KEY, token).apply()
     }
