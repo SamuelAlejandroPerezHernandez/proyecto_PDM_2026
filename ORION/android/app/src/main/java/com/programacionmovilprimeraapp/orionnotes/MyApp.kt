@@ -1,7 +1,6 @@
 package com.programacionmovilprimeraapp.orionnotes
 
 import android.app.Application
-
 import com.programacionmovilprimeraapp.data.local.SessionManager
 
 class MyApp: Application(){
@@ -14,6 +13,6 @@ class MyApp: Application(){
     override fun onCreate() {
         super.onCreate()
 
-        sessionManager = SessionManager.getInstance(this)
+        sessionManager = SessionManager.Companion.getInstance(this)
     }
 }
