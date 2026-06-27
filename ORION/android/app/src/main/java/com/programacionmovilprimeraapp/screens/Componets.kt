@@ -1,6 +1,8 @@
 package com.programacionmovilprimeraapp.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -19,6 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -196,6 +200,73 @@ fun DialogTimeSelector(
                     TimePicker(state = ClockState)
                 }
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NoteBottomSheet(
+    insertNote: (String, String, String) -> Unit,
+    categoryId: String?,
+    onDismiss: () -> Unit,
+    saveMessage: String?
+) {
+    var title by rememberSaveable() { mutableStateOf("") }
+    var content by rememberSaveable() { mutableStateOf("") }
+
+    val sheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        onDismissRequest = { onDismiss() },
+        sheetState = sheetState
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(10.dp)
+        ) {
+            item {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text(text = "Ingrese el Título de la Nota") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            item {
+                OutlinedTextField(
+                    value = content,
+                    onValueChange = { content = it },
+                    label = { Text(text = "Ingrese el Contenido de la Nota") },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 4
+                )
+            }
+
+            item {
+                Button(
+                    onClick = {
+                        if (categoryId != null) {
+                            insertNote(categoryId, title, content)
+                        }
+                        onDismiss()
+                    },
+                    modifier = Modifier.fillMaxWidth(0.6f)
+                ) {
+                    Text(text = "Guardar Nota")
+                }
+            }
+
+            item {
+                saveMessage?.let {
+                    Text(text = it, modifier = Modifier.padding(top = 8.dp))
+                }
+            }
         }
     }
 }

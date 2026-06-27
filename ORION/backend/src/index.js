@@ -25,6 +25,6 @@ app.use('/api/notes', noteRoutes)
 
 app.use('/api/categories', categoriesRoutes)
 
-app.listen(Port, () => {
-    console.log(`Servidor corriendo en el puerto ${Port}`)
+app.listen(Port, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en el puerto ${Port}`);
 })

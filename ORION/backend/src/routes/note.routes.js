@@ -3,10 +3,12 @@ const router = express.Router()
 const noteController = require('../controllers/note.controller')
 const { verificarToken }  = require('../middlewares/auth.middleware')
 
-router.post('/notes', verificarToken, noteController.addNote)
+router.post('/', verificarToken, noteController.addNote)
 
-router.get('/notes', verificarToken, noteController.getNotesList)
+// 🌟 Cambiado de '/notes' a '/'
+router.get('/', verificarToken, noteController.getNotesList)
 
-router.get('/notes/:id', verificarToken, noteController.getNoteDetail)
+// 🌟 Cambiado de '/notes/:id' a '/:id'
+router.get('/:id', verificarToken, noteController.getNoteDetail)
 
 module.exports = router

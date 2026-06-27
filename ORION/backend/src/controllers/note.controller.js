@@ -11,7 +11,7 @@ const addNote = async(req, res) => {
     }
 
     const {data: newNote, error} = await supabase
-        .from('task')
+        .from('notes')
         .insert({
             user_id: userId,
             category_id: categoryId,

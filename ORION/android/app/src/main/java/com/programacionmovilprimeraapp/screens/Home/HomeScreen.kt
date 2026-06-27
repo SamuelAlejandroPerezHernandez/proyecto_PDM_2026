@@ -14,32 +14,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.programacionmovilprimeraapp.screens.TaskBottomSheet
+import com.programacionmovilprimeraapp.screens.NoteBottomSheet
 
-object Categories{
+object Categories {
     const val CATEGORIA_TAREAS = "5d92295a-efee-4629-90c1-7ac1a1e467eb"
     const val CATEGORIA_NOTAS = "91ab95dc-24d5-4bee-b0b2-e920fff44e3e"
 }
 
 @Composable
-fun Home(){
+fun Home() {
 
     val viewModel: HomeViewModel = viewModel()
     val save by viewModel.saving.collectAsState()
     val saveMessage by viewModel.savingMessage.collectAsState()
 
     val insertTask = {
-        categoryId: String, title: String, description: String, dueDate: String ->
+            categoryId: String, title: String, description: String, dueDate: String ->
         viewModel.InsertTask(categoryId, title, description, dueDate)
     }
 
     var categoryId by rememberSaveable() { mutableStateOf<String?>(null) }
 
     val categorySelected = {
-        category: String -> categoryId = category
+            category: String -> categoryId = category
     }
 
     val onDismiss = {
         categoryId = null
+    }
+
+    androidx.compose.runtime.LaunchedEffect(saveMessage) {
+        if (saveMessage == "Nota guardada con éxito" || saveMessage == "Tarea guardada con exito") {
+            onDismiss()
+        }
     }
 
     Scaffold(
@@ -50,12 +57,22 @@ fun Home(){
             Categories.CATEGORIA_NOTAS,
             categorySelected,
         ) }
-    ){
-        innerPadding ->
+    ) { innerPadding ->
         HomeContent(innerPadding)
 
-        if(categoryId != null){
-            TaskBottomSheet(insertTask, categoryId, onDismiss, saveMessage)
+        if (categoryId != null) {
+            if (categoryId == Categories.CATEGORIA_NOTAS) {
+                NoteBottomSheet(
+                    insertNote = { idCat, title, content ->
+                        viewModel.InsertNote(idCat, title, content)
+                    },
+                    categoryId = categoryId,
+                    onDismiss = onDismiss,
+                    saveMessage = saveMessage
+                )
+            } else {
+                TaskBottomSheet(insertTask, categoryId, onDismiss, saveMessage)
+            }
         }
     }
 }
@@ -63,12 +80,12 @@ fun Home(){
 @Composable
 fun HomeContent(
     padding: PaddingValues
-){
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-    ){
+    ) {
 
     }
 }
