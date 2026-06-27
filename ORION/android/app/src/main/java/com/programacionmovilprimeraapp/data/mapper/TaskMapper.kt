@@ -13,8 +13,7 @@ fun TaskRequestModel.toTaskRequestDto(): TaskRequestDto{
         categoryId = categoryId,
         title = title,
         description = description,
-        dueDate = dueDate,
-        dueTime = dueTime
+        dueDate = dueDate
     )
 }
 
@@ -31,7 +30,6 @@ fun TaskDto.toTaskModel(): TaskModel{
         title = title,
         description = description,
         dueDate = dueDate,
-        dueTime = dueTime,
         isCompleted = isCompleted,
         createdAt = createdAt,
         updatedAt = updatedAt,

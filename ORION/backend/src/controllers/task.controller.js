@@ -17,8 +17,7 @@ const addTask = async(req, res) => {
             category_id: categoryId,
             title,
             description,
-            due_date,
-            due_time
+            due_date
         })
         .select()
         .single()

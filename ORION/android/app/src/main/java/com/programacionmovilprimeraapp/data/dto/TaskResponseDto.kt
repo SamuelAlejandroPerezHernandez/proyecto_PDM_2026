@@ -15,7 +15,6 @@ data class TaskDto(
     val title: String,
     val description: String,
     @SerialName("due_date") val dueDate: String,
-    @SerialName("due_time") val dueTime: String,
     @SerialName("is_completed") val isCompleted: Boolean,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String,

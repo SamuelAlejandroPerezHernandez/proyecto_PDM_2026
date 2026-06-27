@@ -62,3 +62,5 @@ const getNoteDetail = async(req, res) => {
         noteDetail
     })
 }
+
+module.exports = { addNote, getNotesList, getNoteDetail }
