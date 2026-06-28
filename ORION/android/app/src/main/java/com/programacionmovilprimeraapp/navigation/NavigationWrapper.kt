@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.programacionmovilprimeraapp.orionnotes.MyApp
-import com.programacionmovilprimeraapp.screens.Home.Home
-import com.programacionmovilprimeraapp.screens.LoginScreen.Login
-import com.programacionmovilprimeraapp.screens.RegisterScreen.Register
-import com.programacionmovilprimeraapp.screens.TaskList.TaskList
+import com.programacionmovilprimeraapp.MyApp
+import com.programacionmovilprimeraapp.features.home.home.Home
+import com.programacionmovilprimeraapp.features.auth.login.Login
+import com.programacionmovilprimeraapp.features.auth.register.Register
+import com.programacionmovilprimeraapp.features.task.taskList.TaskList
 
 @Composable
 fun NavigationWrapper(){
