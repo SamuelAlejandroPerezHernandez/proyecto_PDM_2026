@@ -4,8 +4,10 @@ package com.programacionmovilprimeraapp.data.mapper
 import com.programacionmovilprimeraapp.data.dto.TaskDto
 import com.programacionmovilprimeraapp.data.dto.TaskRequestDto
 import com.programacionmovilprimeraapp.data.dto.TaskResponseDto
+import com.programacionmovilprimeraapp.data.dto.TaskResponseListDto
 import com.programacionmovilprimeraapp.domain.TaskModel
 import com.programacionmovilprimeraapp.domain.TaskRequestModel
+import com.programacionmovilprimeraapp.domain.TaskResponseListModel
 import com.programacionmovilprimeraapp.domain.TaskResponseModel
 
 fun TaskRequestModel.toTaskRequestDto(): TaskRequestDto{
@@ -21,6 +23,12 @@ fun TaskResponseDto.toTaskResponseModel(): TaskResponseModel{
     return TaskResponseModel(
         newTask = newTask.toTaskModel()
     )
+}
+
+fun TaskResponseListDto.toTaskResponseListModel(): TaskResponseListModel {
+   return TaskResponseListModel(
+       tasksList = tasksList.map { it.toTaskModel() }
+   )
 }
 
 fun TaskDto.toTaskModel(): TaskModel{

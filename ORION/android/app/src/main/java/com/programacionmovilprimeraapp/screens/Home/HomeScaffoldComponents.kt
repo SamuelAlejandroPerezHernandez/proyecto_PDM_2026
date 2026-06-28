@@ -60,35 +60,6 @@ import androidx.compose.ui.unit.sp
 
 import com.programacionmovilprimeraapp.orionnotes.R
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeTopBar(
-
-){
-    TopAppBar(
-        title = {},
-
-        navigationIcon = {
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .size(40.dp)
-            ){
-                Icon(
-                    imageVector = Icons.Rounded.Menu,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-        },
-
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorResource( id = R.color.carbonBlack )
-        )
-    )
-}
 
 @Composable
 fun TaskFloatingButtom(
@@ -199,7 +170,7 @@ fun TaskFloatingButtom(
 
 @Composable
 fun HomeBottomBar(
-
+    goToTaskScreen: () -> Unit
 ){
     Box(
         modifier = Modifier
@@ -231,7 +202,7 @@ fun HomeBottomBar(
             }
 
             IconButton(
-                onClick = {},
+                onClick = { goToTaskScreen() },
                 modifier = Modifier
                     .size(30.dp)
             ){

@@ -9,6 +9,7 @@ import com.programacionmovilprimeraapp.orionnotes.MyApp
 import com.programacionmovilprimeraapp.screens.Home.Home
 import com.programacionmovilprimeraapp.screens.LoginScreen.Login
 import com.programacionmovilprimeraapp.screens.RegisterScreen.Register
+import com.programacionmovilprimeraapp.screens.TaskList.TaskList
 
 @Composable
 fun NavigationWrapper(){
@@ -57,6 +58,14 @@ fun NavigationWrapper(){
 
             entry<Route.home>{
                 Home(
+                    goToTaskScreen = {
+                        backStack.add(Route.taskList)
+                    }
+                )
+            }
+
+            entry<Route.taskList>{
+                TaskList(
 
                 )
             }

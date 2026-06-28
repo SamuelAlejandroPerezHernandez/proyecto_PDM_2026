@@ -1,11 +1,15 @@
 package com.programacionmovilprimeraapp.data.repository
 
 
+import com.programacionmovilprimeraapp.data.dto.TaskDto
 import com.programacionmovilprimeraapp.data.dto.TaskResponseDto
+import com.programacionmovilprimeraapp.data.dto.TaskResponseListDto
 import com.programacionmovilprimeraapp.data.local.SessionManager
+import com.programacionmovilprimeraapp.data.mapper.toTaskModel
 import com.programacionmovilprimeraapp.data.mapper.toTaskRequestDto
 import com.programacionmovilprimeraapp.data.mapper.toTaskResponseModel
 import com.programacionmovilprimeraapp.data.remote.KtorClient
+import com.programacionmovilprimeraapp.domain.TaskModel
 import com.programacionmovilprimeraapp.domain.TaskRepository
 import com.programacionmovilprimeraapp.domain.TaskRequestModel
 import com.programacionmovilprimeraapp.domain.TaskResponseModel
@@ -16,6 +20,8 @@ import io.ktor.http.contentType
 import io.ktor.client.call.body
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
+import io.ktor.client.request.get
+
 
 class TaskRepositoryImp(private val sessionManager: SessionManager): TaskRepository{
     override suspend fun createTask(request: TaskRequestModel): Result<TaskResponseModel> {
@@ -35,6 +41,25 @@ class TaskRepositoryImp(private val sessionManager: SessionManager): TaskReposit
 
             Result.success(
                 response.toTaskResponseModel()
+            )
+        }
+        catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getTask(): Result<List<TaskModel>> {
+        return try{
+            val token = sessionManager.getToken()
+
+            val response: TaskResponseListDto = KtorClient.client
+                .get("/api/tasks/getTask"){
+                    header(HttpHeaders.Authorization, "Bearer ${token}")
+                }
+                .body()
+
+            Result.success(
+                response.tasksList.map { it.toTaskModel() }
             )
         }
         catch (e: Exception){

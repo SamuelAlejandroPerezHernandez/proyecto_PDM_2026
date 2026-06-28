@@ -13,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.programacionmovilprimeraapp.screens.OrionTopBar
 import com.programacionmovilprimeraapp.screens.TaskBottomSheet
 
 object Categories{
@@ -21,7 +22,9 @@ object Categories{
 }
 
 @Composable
-fun Home(){
+fun Home(
+    goToTaskScreen: () -> Unit
+){
 
     val viewModel: HomeViewModel = viewModel()
     val save by viewModel.saving.collectAsState()
@@ -43,8 +46,8 @@ fun Home(){
     }
 
     Scaffold(
-        topBar = { HomeTopBar() },
-        bottomBar = { HomeBottomBar() },
+        topBar = { OrionTopBar() },
+        bottomBar = { HomeBottomBar(goToTaskScreen) },
         floatingActionButton = { TaskFloatingButtom(
             Categories.CATEGORIA_TAREAS,
             Categories.CATEGORIA_NOTAS,

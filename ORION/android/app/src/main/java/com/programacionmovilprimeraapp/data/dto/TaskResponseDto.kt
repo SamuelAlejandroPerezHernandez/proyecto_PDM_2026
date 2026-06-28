@@ -9,6 +9,11 @@ data class TaskResponseDto(
 )
 
 @Serializable
+data class TaskResponseListDto(
+    val tasksList: List<TaskDto>
+)
+
+@Serializable
 data class TaskDto(
     val id: String,
     @SerialName("user_id") val userId: String,
