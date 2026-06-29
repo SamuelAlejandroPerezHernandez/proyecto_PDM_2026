@@ -23,3 +23,8 @@ data class NoteDetailDto(
     val title: String,
     val content: String
 )
+
+@Serializable
+data class NotesListResponseDto(
+    val notesList: List<NoteDetailDto>
+)
