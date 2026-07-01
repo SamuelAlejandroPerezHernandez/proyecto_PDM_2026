@@ -1,6 +1,7 @@
 package com.programacionmovilprimeraapp.screens.Home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -95,6 +96,7 @@ fun Home() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
     padding: PaddingValues,
@@ -137,24 +139,48 @@ fun HomeContent(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
+
                     items(notes) { note ->
+                        var isExpanded by remember { mutableStateOf(false) }
+
                         Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.carbonBlack).copy(alpha = 0.4f)),
+                            onClick = { isExpanded = !isExpanded },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateContentSize(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = colorResource(id = R.color.carbonBlack).copy(alpha = 0.4f)
+                            ),
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                Text(
-                                    text = note.title,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = colorResource(id = R.color.pearlAqua)
-                                )
-                                Spacer(modifier = Modifier.height(6.dp))
-                                Text(
-                                    text = note.content,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.White
-                                )
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = note.title,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = colorResource(id = R.color.pearlAqua),
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    Icon(
+                                        imageVector = if (isExpanded) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
+                                        contentDescription = if (isExpanded) "Colapsar" else "Expandir",
+                                        tint = Color.Gray
+                                    )
+                                }
+
+                                if (isExpanded) {
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    Text(
+                                        text = note.content,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = Color.White
+                                    )
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                }
                             }
                         }
                     }
