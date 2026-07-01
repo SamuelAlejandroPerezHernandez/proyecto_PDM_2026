@@ -65,77 +65,74 @@ fun OrionTopBar(
 
 @Composable
 fun HomeBottomBar(
-    goToTaskScreen: () -> Unit
+    seccionActiva: String = "INICIO",
+    goToTaskScreen: () -> Unit,
+    goToHomeScreen: () -> Unit = {},
+    goToProfileScreen: () -> Unit = {}
 ){
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                colorResource( id = R.color.carbonBlack )
-            )
+            .background(colorResource(id = R.color.carbonBlack))
             .windowInsetsPadding(WindowInsets.navigationBars)
             .padding(top = 25.dp, bottom = 40.dp)
     ){
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ){
+            // 1. ÍCONO DE LA CASA (Inicio)
             IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .size(30.dp)
+                onClick = { goToHomeScreen() },
+                modifier = Modifier.size(30.dp)
             ){
                 Icon(
                     imageVector = Icons.Rounded.Home,
                     contentDescription = null,
-                    tint = colorResource( id = R.color.pearlAqua),
-                    modifier = Modifier
-                        .fillMaxSize()
+                    tint = if (seccionActiva == "INICIO")
+                        colorResource(id = R.color.pearlAqua)
+                    else
+                        Color.White,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
-
             IconButton(
                 onClick = { goToTaskScreen() },
-                modifier = Modifier
-                    .size(30.dp)
+                modifier = Modifier.size(30.dp)
             ){
                 Icon(
                     imageVector = Icons.Rounded.CalendarMonth,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
             IconButton(
                 onClick = {},
-                modifier = Modifier
-                    .size(30.dp)
-
+                modifier = Modifier.size(30.dp)
             ){
                 Icon(
                     imageVector = Icons.Rounded.Notifications,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
             IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .size(30.dp)
+                onClick = { goToProfileScreen() },
+                modifier = Modifier.size(30.dp)
             ){
                 Icon(
                     imageVector = Icons.Rounded.Person,
                     contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .fillMaxSize()
+                    tint = if (seccionActiva == "PERFIL")
+                        colorResource(id = R.color.pearlAqua)
+                    else
+                        Color.White,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
