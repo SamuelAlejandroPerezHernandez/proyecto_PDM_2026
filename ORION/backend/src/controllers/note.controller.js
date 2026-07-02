@@ -11,7 +11,7 @@ const addNote = async(req, res) => {
     }
 
     const {data: newNote, error} = await supabase
-        .from('task')
+        .from('notes')
         .insert({
             user_id: userId,
             category_id: categoryId,
@@ -63,4 +63,44 @@ const getNoteDetail = async(req, res) => {
     })
 }
 
-module.exports = { addNote, getNotesList, getNoteDetail }
+const updateNote = async(req, res) => {
+    const {id} = req.params
+
+    const { id: noteId, user_id, ...camposAActualizar } = req.body
+
+    const {data: UpdateNote, error} = await supabase
+        .from('notes')
+        .update(camposAActualizar)
+        .eq('id', id)
+        .select()
+        .single()
+        
+    if(error){
+        return res.status(500).json({message: 'error al intentar actualizar la nota'})
+    }
+
+    res.status(200).json({
+        UpdateNote
+    })
+}
+
+const deleteNote = async(req, res) => {
+    const {id} = req.params
+
+    const { data: deleteNote, error } = await supabase
+        .from('notes')
+        .delete()
+        .eq('id', id)
+        .slecte()
+        .single()
+
+    if(error){
+        return res.status(500).json({message: 'error al intentar eliminar la nota'})
+    }
+
+    res.status(200).json({
+        deleteNote
+    })
+}
+
+module.exports = { addNote, getNotesList, getNoteDetail, updateNote, deleteNote }
