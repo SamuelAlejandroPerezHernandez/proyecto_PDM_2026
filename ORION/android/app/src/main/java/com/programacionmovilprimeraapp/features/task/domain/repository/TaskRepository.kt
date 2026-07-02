@@ -8,4 +8,7 @@ interface TaskRepository {
     suspend fun createTask(request: TaskRequestModel): Result<TaskResponseModel>
 
     suspend fun getTask(): Result<List<TaskModel>>
+
+
+    suspend fun getUpcomingTasks(): Result<List<TaskModel>>
 }
