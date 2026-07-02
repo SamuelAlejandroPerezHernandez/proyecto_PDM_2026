@@ -3,10 +3,14 @@ const router = express.Router()
 const noteController = require('../controllers/note.controller')
 const { verificarToken }  = require('../middlewares/auth.middleware')
 
-router.post('/notes', verificarToken, noteController.addNote)
+router.post('/postNotes', verificarToken, noteController.addNote)
 
-router.get('/notes', verificarToken, noteController.getNotesList)
+router.get('/getNotes', verificarToken, noteController.getNotesList)
 
-router.get('/notes/:id', verificarToken, noteController.getNoteDetail)
+router.get('/detail/:id', verificarToken, noteController.getNoteDetail)
+
+router.put('/update/:id', verificarToken, noteController.updateNote)
+
+router.delete('/delete/:id', verificarToken, noteController.deleteNote)
 
 module.exports = router
