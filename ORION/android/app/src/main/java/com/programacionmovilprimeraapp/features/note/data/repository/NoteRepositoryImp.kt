@@ -11,6 +11,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
@@ -41,6 +42,26 @@ class NoteRepositoryImp(
         return try {
             val token = sessionManager.getToken() ?: ""
             val response = KtorClient.client.post(urlString = "/api/notes") {
+                header(HttpHeaders.Authorization, "Bearer $token")
+                contentType(ContentType.Application.Json)
+                setBody(NoteRequestDto(categoryId = categoryId, title = title, content = content))
+            }
+
+            if (response.status.isSuccess()) {
+                Result.success(Unit)
+            } else {
+                val errorBody = response.bodyAsText()
+                Result.failure(Exception("Error del servidor (${response.status.value}): $errorBody"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateNote(id: String, title: String, content: String, categoryId: String?): Result<Unit> {
+        return try {
+            val token = sessionManager.getToken() ?: ""
+            val response = KtorClient.client.put(urlString = "/api/notes/$id") {
                 header(HttpHeaders.Authorization, "Bearer $token")
                 contentType(ContentType.Application.Json)
                 setBody(NoteRequestDto(categoryId = categoryId, title = title, content = content))

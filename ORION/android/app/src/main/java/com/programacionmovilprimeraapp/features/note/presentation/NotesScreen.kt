@@ -12,15 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +36,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -95,6 +99,7 @@ fun NotesScreen(
                     items(notes) { note ->
                         NoteCardItem(
                             note = note,
+                            viewModel = viewModel,
                             onDelete = { viewModel.deleteNote(note.id) }
                         )
                     }
@@ -108,10 +113,12 @@ fun NotesScreen(
 @Composable
 fun NoteCardItem(
     note: NoteModel,
+    viewModel: NoteViewModel,
     onDelete: () -> Unit = {}
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
+    var showEditSheet by remember { mutableStateOf(false) }
 
     Card(
         onClick = { isExpanded = !isExpanded },
@@ -148,6 +155,13 @@ fun NoteCardItem(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
+                    IconButton(onClick = { showEditSheet = true }, modifier = Modifier.size(24.dp)) {
+                        Icon(
+                            imageVector = Icons.Rounded.Edit,
+                            contentDescription = "Editar"
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
                     IconButton(onClick = { showDeleteConfirm = true }, modifier = Modifier.size(24.dp)) {
                         Icon(
                             imageVector = Icons.Rounded.Delete,
@@ -170,20 +184,40 @@ fun NoteCardItem(
                         onDelete()
                         showDeleteConfirm = false
                     },
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFD32F2F)
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                 ) {
                     Text("Eliminar", color = Color.White)
                 }
             },
             dismissButton = {
-                OutlinedButton(
-                    onClick = { showDeleteConfirm = false }
-                ) {
+                OutlinedButton(onClick = { showDeleteConfirm = false }) {
                     Text("Cancelar")
                 }
             }
+        )
+    }
+
+    if (showEditSheet) {
+        val editMessage by viewModel.editMessage.collectAsState()
+        val editSuccess by viewModel.editSuccess.collectAsState()
+
+        LaunchedEffect(editSuccess) {
+            if (editSuccess) {
+                showEditSheet = false
+                viewModel.resetEditSuccess()
+            }
+        }
+
+        EditNoteBottomSheet(
+            note = note,
+            onDismiss = {
+                showEditSheet = false
+                viewModel.clearEditMessage()
+            },
+            onSave = { title, content ->
+                viewModel.updateNote(note.id, title, content, note.categoryId)
+            },
+            saveMessage = editMessage
         )
     }
 }
@@ -232,6 +266,62 @@ fun AddNoteBottomSheet(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Guardar Nota")
+            }
+
+            saveMessage?.let {
+                Text(text = it)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditNoteBottomSheet(
+    note: NoteModel,
+    onDismiss: () -> Unit,
+    onSave: (String, String) -> Unit,
+    saveMessage: String? = null
+) {
+    var title by remember { mutableStateOf(note.title) }
+    var content by remember { mutableStateOf(note.content) }
+    val sheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text("Editar Nota", style = MaterialTheme.typography.titleLarge)
+
+            OutlinedTextField(
+                value = title,
+                onValueChange = { title = it },
+                label = { Text("Título") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = content,
+                onValueChange = { content = it },
+                label = { Text("Contenido") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+            )
+
+            Button(
+                onClick = { if (title.isNotBlank()) onSave(title, content) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Guardar Cambios")
             }
 
             saveMessage?.let {

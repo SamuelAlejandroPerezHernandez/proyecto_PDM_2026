@@ -28,9 +28,15 @@ class NoteViewModel(
     private val _saveSuccess = MutableStateFlow(false)
     val saveSuccess = _saveSuccess.asStateFlow()
 
-    // Nuevo: mensaje de error al eliminar (si algo falla)
     private val _deleteMessage = MutableStateFlow<String?>(null)
     val deleteMessage = _deleteMessage.asStateFlow()
+
+    // Nuevo: mensaje y señal de éxito para editar
+    private val _editMessage = MutableStateFlow<String?>(null)
+    val editMessage = _editMessage.asStateFlow()
+
+    private val _editSuccess = MutableStateFlow(false)
+    val editSuccess = _editSuccess.asStateFlow()
 
     init {
         loadNotes()
@@ -61,6 +67,21 @@ class NoteViewModel(
         }
     }
 
+    fun updateNote(id: String, title: String, content: String, categoryId: String?) {
+        viewModelScope.launch {
+            repository.updateNote(id, title, content, categoryId)
+                .onSuccess {
+                    _editMessage.value = null
+                    _editSuccess.value = true
+                    loadNotes()
+                }
+                .onFailure { e ->
+                    android.util.Log.e("NoteViewModel", "ERROR AL EDITAR NOTA", e)
+                    _editMessage.value = "Error al editar la nota: ${e.message}"
+                }
+        }
+    }
+
     fun deleteNote(id: String) {
         viewModelScope.launch {
             repository.deleteNote(id)
@@ -81,6 +102,14 @@ class NoteViewModel(
 
     fun resetSaveSuccess() {
         _saveSuccess.value = false
+    }
+
+    fun clearEditMessage() {
+        _editMessage.value = null
+    }
+
+    fun resetEditSuccess() {
+        _editSuccess.value = false
     }
 
     companion object {
