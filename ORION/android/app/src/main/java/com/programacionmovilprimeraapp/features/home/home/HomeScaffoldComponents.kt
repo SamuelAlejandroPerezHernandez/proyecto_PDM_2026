@@ -68,7 +68,8 @@ fun HomeBottomBar(
     seccionActiva: String = "INICIO",
     goToTaskScreen: () -> Unit,
     goToHomeScreen: () -> Unit = {},
-    goToProfileScreen: () -> Unit = {}
+    goToProfileScreen: () -> Unit = {},
+    goToNotesScreen: () -> Unit = {}
 ){
     Box(
         modifier = Modifier
@@ -82,7 +83,7 @@ fun HomeBottomBar(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ){
-            // 1. ÍCONO DE LA CASA (Inicio)
+            // 1. ÍCONO DE INICIO
             IconButton(
                 onClick = { goToHomeScreen() },
                 modifier = Modifier.size(30.dp)
@@ -97,6 +98,8 @@ fun HomeBottomBar(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
+            // 2. ÍCONO DEL CALENDARIO
             IconButton(
                 onClick = { goToTaskScreen() },
                 modifier = Modifier.size(30.dp)
@@ -109,18 +112,23 @@ fun HomeBottomBar(
                 )
             }
 
+            // 3. ÍCONO DE NOTIFICACIONES
             IconButton(
-                onClick = {},
+                onClick = { goToNotesScreen() },
                 modifier = Modifier.size(30.dp)
             ){
                 Icon(
                     imageVector = Icons.Rounded.Notifications,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = if (seccionActiva == "NOTAS")
+                        colorResource(id = R.color.pearlAqua)
+                    else
+                        Color.White,
                     modifier = Modifier.fillMaxSize()
                 )
             }
 
+            // 4. ÍCONO DE PERFIL
             IconButton(
                 onClick = { goToProfileScreen() },
                 modifier = Modifier.size(30.dp)

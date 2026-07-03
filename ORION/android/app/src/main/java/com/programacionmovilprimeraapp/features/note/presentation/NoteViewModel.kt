@@ -3,14 +3,13 @@ package com.programacionmovilprimeraapp.features.note.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.programacionmovilprimeraapp.features.note.data.repository.NoteRepositoryImp
-import com.programacionmovilprimeraapp.features.note.domain.model.NoteModel
-import com.programacionmovilprimeraapp.features.note.domain.repository.NoteRepository
+
 import com.programacionmovilprimeraapp.core.data.local.SessionManager
 import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.collections.emptyList
 
 class NoteViewModel(
     private val repository: NoteRepository

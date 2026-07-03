@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
@@ -24,13 +23,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -43,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.programacionmovilprimeraapp.features.note.domain.model.NoteModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,66 +49,40 @@ fun NotesScreen(
 ) {
     val notes by viewModel.notes.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val saveMessage by viewModel.savingMessage.collectAsState()
-    var showBottomSheet by remember { mutableStateOf(false) }
 
-    Scaffold(
-        modifier = Modifier.padding(paddingValues),
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showBottomSheet = true }
+    Box(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+    ) {
+        if (isLoading && notes.isEmpty()) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        } else if (notes.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "No hay notas disponibles", fontSize = 16.sp)
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Agregar Nota")
-            }
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            if (isLoading && notes.isEmpty()) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else if (notes.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "No hay notas disponibles", fontSize = 16.sp)
+                item {
+                    Text(
+                        text = "Mis Notas",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    )
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    item {
-                        Text(
-                            text = "Mis Notas",
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(vertical = 12.dp)
-                        )
-                    }
 
-                    items(notes) { note ->
-                        NoteCardItem(note = note)
-                    }
+                items(notes) { note ->
+                    NoteCardItem(note = note)
                 }
             }
         }
-    }
-
-    if (showBottomSheet) {
-        AddNoteBottomSheet(
-            onDismiss = {
-                showBottomSheet = false
-                viewModel.clearSavingMessage()
-            },
-            onSave = { title, content ->
-                viewModel.createNote(title, content)
-            },
-            saveMessage = saveMessage
-        )
     }
 }
 
@@ -213,6 +183,12 @@ fun AddNoteBottomSheet(
             ) {
                 Text("Guardar Nota")
             }
+
+            saveMessage?.let {
+                Text(text = it)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

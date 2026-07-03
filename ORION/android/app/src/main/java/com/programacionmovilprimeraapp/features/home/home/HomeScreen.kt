@@ -83,7 +83,8 @@ fun Home(
                 seccionActiva = seccionActiva,
                 goToTaskScreen = { goToTaskScreen() },
                 goToHomeScreen = { seccionActiva = "INICIO" },
-                goToProfileScreen = { seccionActiva = "PERFIL" }
+                goToProfileScreen = { seccionActiva = "PERFIL" },
+                goToNotesScreen = { seccionActiva = "NOTAS" }
             )
         },
         floatingActionButton = {
