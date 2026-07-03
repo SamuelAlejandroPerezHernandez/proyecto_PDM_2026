@@ -32,12 +32,20 @@ import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,10 +55,14 @@ import com.programacionmovilprimeraapp.core.ui.components.LoadingContent
 import com.programacionmovilprimeraapp.features.home.home.OrionTopBar
 import com.programacionmovilprimeraapp.orionnotes.R
 import com.programacionmovilprimeraapp.features.task.taskList.TaskListViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskList(){
+fun TaskList(
+    goToDetail: (String) -> Unit
+){
     val viewModel: TaskListViewModel = viewModel()
     val taskList by viewModel.taskList.collectAsState()
     val error by viewModel.error.collectAsState()
@@ -63,6 +75,11 @@ fun TaskList(){
 
     val onRetry = {
         viewModel.loadTask()
+    }
+
+    val update = {
+        id: String, isCompleted: Boolean ->
+        viewModel.updateTaskStatus(id, isCompleted)
     }
 
     Scaffold(
@@ -80,7 +97,14 @@ fun TaskList(){
             }
 
             else -> {
-                TaskListContent(taskList, innerPadding)
+                PullToRefreshBox(
+                    isRefreshing = refreshing,
+                    onRefresh = { viewModel.refreshingTasks() },
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    TaskListContent(taskList, innerPadding, goToDetail, update)
+                }
             }
         }
     }
@@ -89,7 +113,9 @@ fun TaskList(){
 @Composable
 fun TaskListContent(
     taskList: List<TaskModel>,
-    padding: PaddingValues
+    padding: PaddingValues,
+    goToDetail: (String) -> Unit,
+    update: (String, Boolean) -> Unit
 ){
     LazyColumn(
         modifier = Modifier
@@ -100,45 +126,40 @@ fun TaskListContent(
     ){
         items(taskList){
             task ->
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.carbonBlack)),
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Row(
+
+            var checkStatus by rememberSaveable { mutableStateOf(task.isCompleted) }
+
+            if(task.isCompleted == false){
+                Card(
+                    onClick = { goToDetail(task.id) },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.carbonBlack)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.Top
                 ) {
-                    Column(
+                    Row(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp)
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.Top
                     ) {
+
+
 
                         Text(text = task.title,
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp)
 
-                        Spacer(modifier = Modifier.height(6.dp))
 
-                        Text(text = task.description,
-                            color = Color(0xFF94A3B8),
-                            fontSize = 14.sp)
+                        Switch(
+                            checked = checkStatus,
+                            onCheckedChange = { change ->
+                                checkStatus = change
+                                update(task.id, change)
+                            }
+                        )
 
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = task.dueDate,
-                                color = colorResource(id = R.color.pearlAqua),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 12.sp)
-                        }
                     }
                 }
             }

@@ -9,6 +9,7 @@ import com.programacionmovilprimeraapp.MyApp
 import com.programacionmovilprimeraapp.features.home.home.Home
 import com.programacionmovilprimeraapp.features.auth.login.Login
 import com.programacionmovilprimeraapp.features.auth.register.Register
+import com.programacionmovilprimeraapp.features.task.taskDetail.TaskDetailScreen
 import com.programacionmovilprimeraapp.features.task.taskList.TaskList
 
 @Composable
@@ -66,7 +67,16 @@ fun NavigationWrapper(){
 
             entry<Route.taskList>{
                 TaskList(
+                    goToDetail = {
+                        id ->
+                        backStack.add(Route.taskDetail(id))
+                    }
+                )
+            }
 
+            entry<Route.taskDetail>{
+                TaskDetailScreen(
+                    id = it.id
                 )
             }
         }

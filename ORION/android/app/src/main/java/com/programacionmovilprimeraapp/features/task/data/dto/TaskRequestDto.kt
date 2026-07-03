@@ -10,3 +10,12 @@ data class TaskRequestDto(
     val description: String,
     @SerialName("due_date") val dueDate: String
 )
+
+@Serializable
+data class TaskUpdateRequestDto(
+    @SerialName("category_id") val categoryId: String?,
+    val title: String?,
+    val description: String?,
+    @SerialName("due_date") val dueDate: String?,
+    @SerialName("is_completed") val isCompleted: Boolean?
+)

@@ -14,6 +14,21 @@ data class TaskResponseListDto(
 )
 
 @Serializable
+data class TaskDetailDto(
+    val taskDetail: TaskDto
+)
+
+@Serializable
+data class TaskUpdateDto(
+    val updateTask: TaskDto
+)
+
+@Serializable
+data class TaskDeleteDto(
+    val deleteTask: TaskDto
+)
+
+@Serializable
 data class TaskDto(
     val id: String,
     @SerialName("user_id") val userId: String,

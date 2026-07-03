@@ -17,6 +17,7 @@ object KtorClient{
             json(
                 Json{
                     ignoreUnknownKeys = true
+                    encodeDefaults = false
                 }
             )
         }

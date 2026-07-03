@@ -61,8 +61,56 @@ const getTaskDetail = async(req, res) => {
 
         res.status(200).json({
             taskDetail
+        })
+}
+
+const updateTask = async(req, res) => {
+    const {id} = req.params
+
+    const { id: noteId, user_id, ...bodyCompleto } = req.body
+
+    const camposAActualizar = {}
+    Object.keys(bodyCompleto).forEach(key => {
+        if (bodyCompleto[key] !== null && bodyCompleto[key] !== undefined) {
+            camposAActualizar[key] = bodyCompleto[key]
+        }
+    })
+
+    const {data: updateTask, error} = await supabase
+        .from('task')
+        .update(camposAActualizar)
+        .eq('id', id)
+        .select()
+        .single()
+
+        if(error){
+            return res.status(500).json({message: 'Error al intentar actualizar la tarea'})
+        }
+
+        res.status(200).json({
+            updateTask
+        })
+}
+
+const deleteTask = async(req, res) => {
+    const {id} = req.params
+
+    const { data: deleteTask, error } = await supabase
+        .from('task')
+        .delete()
+        .eq('id', id)
+        .select()
+        .single()
+
+    if(error){
+            return res.status(500).json({message: 'Error al intentar eliminar la tarea'})
+        }
+
+    res.status(200).json({
+        deleteTask
     })
 }
 
-module.exports = { addTask, getTasksList, getTaskDetail }
+
+module.exports = { addTask, getTasksList, getTaskDetail, updateTask, deleteTask }
 

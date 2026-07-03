@@ -6,8 +6,10 @@ import com.programacionmovilprimeraapp.features.task.data.repository.TaskReposit
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskModel
 import com.programacionmovilprimeraapp.features.task.domain.repository.TaskRepository
 import com.programacionmovilprimeraapp.MyApp
+import com.programacionmovilprimeraapp.features.task.domain.model.TaskUpdateRequestModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class TaskListViewModel(): ViewModel(){
@@ -26,6 +28,12 @@ class TaskListViewModel(): ViewModel(){
     private val _refreshing = MutableStateFlow(false)
     val refreshing = _refreshing.asStateFlow()
 
+    private val _saving = MutableStateFlow(false)
+    val saving = _saving.asStateFlow()
+
+    private val _savingMessage = MutableStateFlow<String?>(null)
+    var savingMessage = _savingMessage.asStateFlow()
+
     fun loadTask(){
         viewModelScope.launch {
             _loading.value = true
@@ -39,7 +47,7 @@ class TaskListViewModel(): ViewModel(){
                 .onFailure {
                     e ->
                     _error.value = e.message
-                    println("🚨 ERROR EN REPOSITORIO ANDROID: ${e.localizedMessage}")
+                    println(" ERROR EN REPOSITORIO ANDROID: ${e.localizedMessage}")
                 }
 
             _loading.value = false
@@ -62,6 +70,27 @@ class TaskListViewModel(): ViewModel(){
                 }
 
             _refreshing.value = false
+        }
+    }
+
+    fun updateTaskStatus(id: String, isCompleted: Boolean){
+        _saving.value = true
+
+        val updateRequest = TaskUpdateRequestModel(
+            isCompleted = isCompleted
+        )
+
+        viewModelScope.launch {
+            repository.updateTask(id, updateRequest)
+                .onSuccess {
+                    _savingMessage.value = "FELICIDADES COMPLETASTE LA TAREA"
+                    refreshingTasks()
+                }
+                .onFailure {
+                    _savingMessage.value = "parece que hubo un error al intentar marcara la tarea como completa"
+                }
+
+            _saving.value = false
         }
     }
 }

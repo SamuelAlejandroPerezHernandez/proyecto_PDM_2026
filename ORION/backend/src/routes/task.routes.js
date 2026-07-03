@@ -7,7 +7,11 @@ router.post('/postTask', verificarToken , taskController.addTask)
 
 router.get('/getTask', verificarToken , taskController.getTasksList)
 
-router.get('/:id', verificarToken , taskController.getTaskDetail)
+router.get('/detail/:id', verificarToken , taskController.getTaskDetail)
+
+router.put('/update/:id', verificarToken , taskController.updateTask)
+
+router.delete('/delete/:id', verificarToken , taskController.deleteTask)
 
 module.exports = router 
 
