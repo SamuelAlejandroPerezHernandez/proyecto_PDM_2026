@@ -3,13 +3,14 @@ package com.programacionmovilprimeraapp.features.note.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-
+import com.programacionmovilprimeraapp.features.note.data.repository.NoteRepositoryImp
+import com.programacionmovilprimeraapp.features.note.domain.model.NoteModel
+import com.programacionmovilprimeraapp.features.note.domain.repository.NoteRepository
 import com.programacionmovilprimeraapp.core.data.local.SessionManager
 import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlin.collections.emptyList
 
 class NoteViewModel(
     private val repository: NoteRepository
@@ -23,8 +24,13 @@ class NoteViewModel(
 
     private val _savingMessage = MutableStateFlow<String?>(null)
     val savingMessage = _savingMessage.asStateFlow()
+
     private val _saveSuccess = MutableStateFlow(false)
     val saveSuccess = _saveSuccess.asStateFlow()
+
+    // Nuevo: mensaje de error al eliminar (si algo falla)
+    private val _deleteMessage = MutableStateFlow<String?>(null)
+    val deleteMessage = _deleteMessage.asStateFlow()
 
     init {
         loadNotes()
@@ -51,6 +57,20 @@ class NoteViewModel(
                 .onFailure { e ->
                     android.util.Log.e("NoteViewModel", "ERROR AL GUARDAR NOTA", e)
                     _savingMessage.value = "Error al guardar la nota: ${e.message}"
+                }
+        }
+    }
+
+    fun deleteNote(id: String) {
+        viewModelScope.launch {
+            repository.deleteNote(id)
+                .onSuccess {
+                    _deleteMessage.value = null
+                    loadNotes()
+                }
+                .onFailure { e ->
+                    android.util.Log.e("NoteViewModel", "ERROR AL ELIMINAR NOTA", e)
+                    _deleteMessage.value = "Error al eliminar la nota: ${e.message}"
                 }
         }
     }

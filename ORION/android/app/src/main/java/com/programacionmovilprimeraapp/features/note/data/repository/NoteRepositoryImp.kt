@@ -7,6 +7,7 @@ import com.programacionmovilprimeraapp.features.note.data.dto.NotesListResponseD
 import com.programacionmovilprimeraapp.features.note.domain.model.NoteModel
 import com.programacionmovilprimeraapp.features.note.domain.repository.NoteRepository
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -43,6 +44,24 @@ class NoteRepositoryImp(
                 header(HttpHeaders.Authorization, "Bearer $token")
                 contentType(ContentType.Application.Json)
                 setBody(NoteRequestDto(categoryId = categoryId, title = title, content = content))
+            }
+
+            if (response.status.isSuccess()) {
+                Result.success(Unit)
+            } else {
+                val errorBody = response.bodyAsText()
+                Result.failure(Exception("Error del servidor (${response.status.value}): $errorBody"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteNote(id: String): Result<Unit> {
+        return try {
+            val token = sessionManager.getToken() ?: ""
+            val response = KtorClient.client.delete(urlString = "/api/notes/$id") {
+                header(HttpHeaders.Authorization, "Bearer $token")
             }
 
             if (response.status.isSuccess()) {
