@@ -76,7 +76,11 @@ fun NavigationWrapper(){
 
             entry<Route.taskDetail>{
                 TaskDetailScreen(
-                    id = it.id
+                    id = it.id,
+
+                    backToList = {
+                        backStack.removeLastOrNull()
+                    }
                 )
             }
         }

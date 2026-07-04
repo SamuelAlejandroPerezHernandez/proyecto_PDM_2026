@@ -7,6 +7,7 @@ import com.programacionmovilprimeraapp.features.task.data.repository.TaskReposit
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskDetailModel
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskModel
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskResponseModel
+import com.programacionmovilprimeraapp.features.task.domain.model.TaskUpdateRequestModel
 import com.programacionmovilprimeraapp.features.task.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,6 +27,12 @@ class TaskDetailViewModel(): ViewModel(){
 
     private val _refreshing = MutableStateFlow(false)
     val refreshing = _refreshing.asStateFlow()
+
+    private val _processing = MutableStateFlow(false)
+    val processing = _processing.asStateFlow()
+
+    private val _processingMessage = MutableStateFlow<String?>(null)
+    var processingMessage = _processingMessage.asStateFlow()
 
     fun loadTaskDetail(id: String){
         viewModelScope.launch {
@@ -67,7 +74,44 @@ class TaskDetailViewModel(): ViewModel(){
         }
     }
 
-    fun updateTaskDetail(id: String, CategoryId: String, Title: String, Description: String, DueDate: String){
+    fun updateTaskDetail(id: String, Title: String, Description: String, DueDate: String){
+        _processing.value = true
 
+        val update = TaskUpdateRequestModel(
+            title = Title,
+            description = Description,
+            dueDate = DueDate,
+            isCompleted = false
+        )
+
+        viewModelScope.launch {
+            repository.updateTask(id, update)
+                .onSuccess {
+                    _processingMessage.value = "la tarea se actualizo correctamente"
+                    refreshingTaskDetail(id)
+                }
+                .onFailure {
+                    _processingMessage.value = "hubo un error al intentar actualizar la tarea"
+                }
+
+            _processing.value = false
+        }
     }
+
+    fun deleteTaskDetail(id: String){
+        _processing.value = true
+
+        viewModelScope.launch {
+            repository.deleteTask(id)
+                .onSuccess {
+                    _processingMessage.value = "Se elimino la tarea de manera exitosa"
+                }
+                .onFailure {
+                    _processingMessage.value = "hubo un problema al intentar eliminar la tarea"
+                }
+
+            _processing.value = false
+        }
+    }
+
 }

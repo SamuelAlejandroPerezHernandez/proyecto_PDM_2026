@@ -67,7 +67,7 @@ const getTaskDetail = async(req, res) => {
 const updateTask = async(req, res) => {
     const {id} = req.params
 
-    const { id: noteId, user_id, ...bodyCompleto } = req.body
+    const { id: taskId, user_id, category_id, ...bodyCompleto } = req.body
 
     const camposAActualizar = {}
     Object.keys(bodyCompleto).forEach(key => {
