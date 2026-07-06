@@ -6,12 +6,17 @@ import com.programacionmovilprimeraapp.features.task.data.repository.TaskReposit
 import com.programacionmovilprimeraapp.features.task.domain.repository.TaskRepository
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskRequestModel
 import com.programacionmovilprimeraapp.MyApp
+import com.programacionmovilprimeraapp.features.notes.data.repository.NoteRepositoryImp
+import com.programacionmovilprimeraapp.features.notes.domain.model.NotesRequestModel
+import com.programacionmovilprimeraapp.features.notes.domain.repository.NoteRepositoryN
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(): ViewModel() {
     private val repository: TaskRepository = TaskRepositoryImp(MyApp.Companion.sessionManager)
+
+    private val repositoryN: NoteRepositoryN = NoteRepositoryImp(MyApp.Companion.sessionManager)
 
     private val _saving = MutableStateFlow(false)
     val saving = _saving.asStateFlow()
@@ -43,6 +48,30 @@ class HomeViewModel(): ViewModel() {
             _saving.value = false
         }
 
+    }
+
+    fun InsertNote(CategoryId: String, title:String, content: String){
+        _saving.value = true
+
+        val NoteRequest = NotesRequestModel(
+            categoryId = CategoryId,
+            title = title,
+            content = content
+        )
+
+        viewModelScope.launch {
+            repositoryN.createNote(NoteRequest)
+                .onSuccess {
+                        response ->
+                    _savingMessage.value = "Nota guardad con exito"
+                }
+                .onFailure {
+                        e ->
+                    _savingMessage.value = "al ingresar la nota ocurrio un error: ${e.message}"
+                }
+
+            _saving.value = false
+        }
     }
 
 }

@@ -13,8 +13,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.programacionmovilprimeraapp.core.ui.components.NoteBottomSheet
 import com.programacionmovilprimeraapp.core.ui.components.TaskBottomSheet
 import com.programacionmovilprimeraapp.core.ui.components.TaskFloatingButtom
+import com.programacionmovilprimeraapp.features.home.home.Categories.CATEGORIA_NOTAS
+import com.programacionmovilprimeraapp.features.home.home.Categories.CATEGORIA_TAREAS
 import com.programacionmovilprimeraapp.features.home.home.HomeViewModel
 
 object Categories{
@@ -24,7 +27,8 @@ object Categories{
 
 @Composable
 fun Home(
-    goToTaskScreen: () -> Unit
+    goToTaskScreen: () -> Unit,
+    goToNoteScreen: () -> Unit
 ){
 
     val viewModel: HomeViewModel = viewModel()
@@ -34,6 +38,11 @@ fun Home(
     val insertTask = {
         categoryId: String, title: String, description: String, dueDate: String ->
         viewModel.InsertTask(categoryId, title, description, dueDate)
+    }
+
+    val insertNote = {
+            categoryId: String, title: String, content: String ->
+        viewModel.InsertNote(categoryId, title, content)
     }
 
     var categoryId by rememberSaveable() { mutableStateOf<String?>(null) }
@@ -48,7 +57,7 @@ fun Home(
 
     Scaffold(
         topBar = { OrionTopBar() },
-        bottomBar = { HomeBottomBar(goToTaskScreen) },
+        bottomBar = { HomeBottomBar(goToTaskScreen, goToNoteScreen) },
         floatingActionButton = { TaskFloatingButtom(
             Categories.CATEGORIA_TAREAS,
             Categories.CATEGORIA_NOTAS,
@@ -59,7 +68,14 @@ fun Home(
         HomeContent(innerPadding)
 
         if(categoryId != null){
-            TaskBottomSheet(insertTask, categoryId, onDismiss, saveMessage)
+            if(categoryId == CATEGORIA_TAREAS){
+                TaskBottomSheet(insertTask, categoryId, onDismiss, saveMessage)
+            }
+            else if(categoryId == CATEGORIA_NOTAS){
+                NoteBottomSheet(insertNote, categoryId, onDismiss, saveMessage)
+            }
+
+
         }
     }
 }

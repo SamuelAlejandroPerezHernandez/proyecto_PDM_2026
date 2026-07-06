@@ -9,6 +9,8 @@ import com.programacionmovilprimeraapp.MyApp
 import com.programacionmovilprimeraapp.features.home.home.Home
 import com.programacionmovilprimeraapp.features.auth.login.Login
 import com.programacionmovilprimeraapp.features.auth.register.Register
+import com.programacionmovilprimeraapp.features.notes.noteDetail.NoteDetailScreen
+import com.programacionmovilprimeraapp.features.notes.noteList.NoteList
 import com.programacionmovilprimeraapp.features.task.taskDetail.TaskDetailScreen
 import com.programacionmovilprimeraapp.features.task.taskList.TaskList
 
@@ -61,6 +63,10 @@ fun NavigationWrapper(){
                 Home(
                     goToTaskScreen = {
                         backStack.add(Route.taskList)
+                    },
+
+                    goToNoteScreen = {
+                        backStack.add(Route.noteList)
                     }
                 )
             }
@@ -79,6 +85,25 @@ fun NavigationWrapper(){
                     id = it.id,
 
                     backToList = {
+                        backStack.removeLastOrNull()
+                    }
+                )
+            }
+
+            entry<Route.noteList>{
+                NoteList(
+                    goToDetailNote = {
+                        id ->
+                        backStack.add(Route.noteDetail(id))
+                    }
+                )
+            }
+
+            entry<Route.noteDetail>{
+                NoteDetailScreen(
+                    id = it.id,
+
+                    backToNoteList = {
                         backStack.removeLastOrNull()
                     }
                 )

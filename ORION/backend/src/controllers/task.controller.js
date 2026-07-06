@@ -87,9 +87,7 @@ const updateTask = async(req, res) => {
             return res.status(500).json({message: 'Error al intentar actualizar la tarea'})
         }
 
-        res.status(200).json({
-            updateTask
-        })
+        res.status(204).send()
 }
 
 const deleteTask = async(req, res) => {
@@ -106,11 +104,9 @@ const deleteTask = async(req, res) => {
             return res.status(500).json({message: 'Error al intentar eliminar la tarea'})
         }
 
-    res.status(200).json({
-        deleteTask
-    })
-}
+    res.status(204).send()
 
+}
 
 module.exports = { addTask, getTasksList, getTaskDetail, updateTask, deleteTask }
 

@@ -212,10 +212,72 @@ fun TaskBottomSheet(
             item{
                 Button(
                     onClick = {
-                        dueDate = "${dateT}${timeT}:00Z"
+                        dueDate = "${dateT}T${timeT}:00Z"
                         if(categoryId != null){
                             insertTask(categoryId, title, description, dueDate)
                         }
+                        onDismiss()
+                    }
+                ) {
+                    Text(text = "Guardar")
+                }
+            }
+
+            item {
+                saveMessage?.let {
+                    Text(text = it)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NoteBottomSheet(
+    insertNote: (String, String, String) -> Unit,
+    categoryId: String?,
+    onDismiss: () -> Unit,
+    saveMessage: String?
+){
+    var title by rememberSaveable() { mutableStateOf("") }
+    var content by rememberSaveable() { mutableStateOf("") }
+
+
+
+    val sheetState = rememberModalBottomSheetState()
+
+    ModalBottomSheet(
+        onDismissRequest = {onDismiss()},
+        sheetState = sheetState
+    ) {
+        LazyColumn(
+
+        ){
+            item{
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it},
+                    label = { Text(text = " Ingrese El TItulo De La Tarea") },
+                    singleLine = true
+                )
+            }
+
+            item{
+                OutlinedTextField(
+                    value = content,
+                    onValueChange = { content = it},
+                    label = { Text(text = " Ingrese La Descripcion De La Tarea") }
+                )
+            }
+
+            item{
+                Button(
+                    onClick = {
+                        if(categoryId != null){
+                            insertNote(categoryId, title, content)
+                        }
+
                         onDismiss()
                     }
                 ) {

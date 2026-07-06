@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:name="com.programacionmovilprimeraapp.MyApp"
         android:allowBackup="true"
@@ -14,7 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ORIONNOTES"
         android:usesCleartextTraffic="true">
-        >
         <activity
             android:name="com.programacionmovilprimeraapp.MainActivity"
             android:exported="true"
@@ -26,6 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
+
     </application>
 
 </manifest>

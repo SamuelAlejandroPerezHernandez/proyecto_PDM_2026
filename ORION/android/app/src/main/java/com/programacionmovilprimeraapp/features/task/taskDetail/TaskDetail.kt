@@ -141,7 +141,7 @@ fun TaskDetailContent(
         }
 
         item{
-            Text(text = task?.taskDetail?.isCompleted.toString()?: "")
+            Text(text = task?.taskDetail?.isCompleted?.toString() ?: "")
         }
 
         item {
@@ -227,7 +227,7 @@ fun TaskUpdatateBottomSheet(
                 Button(
                     onClick = {
                         if(dateT != null && timeT != null){
-                            dueDate = "${dateT}${timeT}:00Z"
+                            dueDate = "${dateT}T${timeT}:00Z"
                         }
 
                         update(task?.taskDetail?.id?: "", title, description, dueDate)
@@ -241,85 +241,6 @@ fun TaskUpdatateBottomSheet(
     }
 }
 
-
-@Composable
-fun TaskListBottomBar(
-
-){
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                colorResource( id = R.color.carbonBlack )
-            )
-            .windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(top = 25.dp, bottom = 40.dp)
-    ){
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .size(30.dp)
-            ){
-                Icon(
-                    imageVector = Icons.Rounded.Home,
-                    contentDescription = null,
-                    tint = colorResource( id = R.color.pearlAqua),
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-
-            IconButton(
-                onClick = {  },
-                modifier = Modifier
-                    .size(30.dp)
-            ){
-                Icon(
-                    imageVector = Icons.Rounded.CalendarMonth,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .size(30.dp)
-
-            ){
-                Icon(
-                    imageVector = Icons.Rounded.Notifications,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .size(30.dp)
-            ){
-                Icon(
-                    imageVector = Icons.Rounded.Person,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-        }
-    }
-}
 
 
 

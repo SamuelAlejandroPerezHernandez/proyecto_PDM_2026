@@ -2,26 +2,19 @@ package com.programacionmovilprimeraapp.features.task.data.repository
 
 import com.programacionmovilprimeraapp.core.data.local.SessionManager
 import com.programacionmovilprimeraapp.core.data.remote.KtorClient
-import com.programacionmovilprimeraapp.features.task.data.dto.TaskDeleteDto
 import com.programacionmovilprimeraapp.features.task.data.dto.TaskDetailDto
-import com.programacionmovilprimeraapp.features.task.data.dto.TaskDto
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskModel
 import com.programacionmovilprimeraapp.features.task.domain.repository.TaskRepository
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskRequestModel
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskResponseModel
 import com.programacionmovilprimeraapp.features.task.data.dto.TaskResponseDto
 import com.programacionmovilprimeraapp.features.task.data.dto.TaskResponseListDto
-import com.programacionmovilprimeraapp.features.task.data.dto.TaskUpdateDto
-import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskDeleteModel
 import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskDetailModel
 import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskModel
 import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskRequestDto
 import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskResponseModel
-import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskUpdateModel
 import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskUpdateRequestDto
-import com.programacionmovilprimeraapp.features.task.domain.model.TaskDeleteModel
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskDetailModel
-import com.programacionmovilprimeraapp.features.task.domain.model.TaskUpdateModel
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskUpdateRequestModel
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
@@ -97,43 +90,38 @@ class TaskRepositoryImp(private val sessionManager: SessionManager): TaskReposit
        }
     }
 
-    override suspend fun updateTask(id: String, request: TaskUpdateRequestModel): Result<TaskUpdateModel> {
+    override suspend fun updateTask(id: String, request: TaskUpdateRequestModel): Result<Unit> {
         return try{
             val request = request.toTaskUpdateRequestDto()
 
             val token = sessionManager.getToken()
 
-            val response: TaskUpdateDto = KtorClient.client
-                .put("/api/tasks/update/${id}"){
-                    contentType(ContentType.Application.Json)
-                    setBody(request)
 
-                    header(HttpHeaders.Authorization, "Bearer ${token}")
-                }
-                .body()
+            KtorClient.client.put("/api/tasks/update/${id}") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
 
-            Result.success(
-                response.toTaskUpdateModel()
-            )
+                header(HttpHeaders.Authorization, "Bearer ${token}")
+
+            }
+
+            Result.success(Unit)
         }
         catch(e: Exception){
             Result.failure(e)
         }
     }
 
-    override suspend fun deleteTask(id: String): Result<TaskDeleteModel> {
+    override suspend fun deleteTask(id: String): Result<Unit> {
         return try{
             val token = sessionManager.getToken()
 
-            val response: TaskDeleteDto = KtorClient.client
-                .delete("/api/tasks/delete/${id}"){
-                    header(HttpHeaders.Authorization, "Bearer ${token}")
-                }
-                .body()
 
-            Result.success(
-                response.toTaskDeleteModel()
-            )
+            KtorClient.client.delete("/api/tasks/delete/${id}"){
+                header(HttpHeaders.Authorization, "Bearer ${token}")
+            }
+
+            Result.success(Unit)
         }
         catch(e: Exception){
             Result.failure(e)

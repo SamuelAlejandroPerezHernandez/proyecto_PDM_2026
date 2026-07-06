@@ -1,9 +1,5 @@
 package com.programacionmovilprimeraapp.features.task.domain.model
 
-import com.programacionmovilprimeraapp.features.task.data.dto.TaskDto
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
 data class TaskRequestModel(
     val categoryId: String,
     val title: String,
@@ -23,20 +19,8 @@ data class TaskResponseModel(
     val newTask: TaskModel
 )
 
-data class TaskResponseListModel(
-    val tasksList: List<TaskModel>
-)
-
 data class TaskDetailModel(
     val taskDetail: TaskModel
-)
-
-data class TaskUpdateModel(
-    val updateTask: TaskModel
-)
-
-data class TaskDeleteModel(
-    val deleteTask: TaskModel
 )
 
 data class TaskModel(

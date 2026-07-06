@@ -17,9 +17,15 @@ sealed class Route: NavKey{
     @Serializable
     data object taskList: Route()
 
+    @Serializable
+    data object noteList: Route()
 
     @Serializable
     data class taskDetail(val id: String): Route(){
 
     }
+
+    @Serializable
+    data class noteDetail(val id: String): Route()
+
 }

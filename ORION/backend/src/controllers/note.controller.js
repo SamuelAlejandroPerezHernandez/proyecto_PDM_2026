@@ -66,7 +66,14 @@ const getNoteDetail = async(req, res) => {
 const updateNote = async(req, res) => {
     const {id} = req.params
 
-    const { id: noteId, user_id, ...camposAActualizar } = req.body
+    const { id: noteId, user_id, category_id, ...bodyCompleto } = req.body
+
+    const camposAActualizar = {}
+    Object.keys(bodyCompleto).forEach(key => {
+        if (bodyCompleto[key] !== null && bodyCompleto[key] !== undefined) {
+            camposAActualizar[key] = bodyCompleto[key]
+        }
+    })
 
     const {data: UpdateNote, error} = await supabase
         .from('notes')
@@ -76,12 +83,12 @@ const updateNote = async(req, res) => {
         .single()
         
     if(error){
+        console.log("ERROR UPDATE NOTE:", error)   // 👈 agrega esto
         return res.status(500).json({message: 'error al intentar actualizar la nota'})
     }
 
-    res.status(200).json({
-        UpdateNote
-    })
+
+    res.status(204).send()
 }
 
 const deleteNote = async(req, res) => {
@@ -91,16 +98,15 @@ const deleteNote = async(req, res) => {
         .from('notes')
         .delete()
         .eq('id', id)
-        .slecte()
+        .select()
         .single()
 
     if(error){
+        console.log("ERROR DELETE NOTE:", error)   // 👈 agrega esto
         return res.status(500).json({message: 'error al intentar eliminar la nota'})
     }
 
-    res.status(200).json({
-        deleteNote
-    })
+    res.status(204).send()
 }
 
 module.exports = { addNote, getNotesList, getNoteDetail, updateNote, deleteNote }
