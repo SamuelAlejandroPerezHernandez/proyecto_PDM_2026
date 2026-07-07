@@ -16,4 +16,6 @@ interface TaskRepository {
     suspend fun updateTask(id: String, request: TaskUpdateRequestModel): Result<Unit>
 
     suspend fun deleteTask(id: String): Result<Unit>
+
+    suspend fun getUpcomingTasks(): Result<List<TaskModel>>
 }

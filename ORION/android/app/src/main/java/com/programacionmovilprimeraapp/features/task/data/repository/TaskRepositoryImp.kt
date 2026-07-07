@@ -9,6 +9,7 @@ import com.programacionmovilprimeraapp.features.task.domain.model.TaskRequestMod
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskResponseModel
 import com.programacionmovilprimeraapp.features.task.data.dto.TaskResponseDto
 import com.programacionmovilprimeraapp.features.task.data.dto.TaskResponseListDto
+import com.programacionmovilprimeraapp.features.task.data.dto.UpcomingTasksResponseDto
 import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskDetailModel
 import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskModel
 import com.programacionmovilprimeraapp.features.task.data.mapper.toTaskRequestDto
@@ -124,6 +125,22 @@ class TaskRepositoryImp(private val sessionManager: SessionManager): TaskReposit
             Result.success(Unit)
         }
         catch(e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getUpcomingTasks(): Result<List<TaskModel>> {
+        return try {
+            val token = sessionManager.getToken()
+            val response: UpcomingTasksResponseDto = KtorClient.client
+                .get("/api/tasks/upcoming") {
+                    header(HttpHeaders.Authorization, "Bearer ${token}")
+                }
+                .body()
+            Result.success(
+                response.upcomingTasks.map { it.toTaskModel() }
+            )
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
