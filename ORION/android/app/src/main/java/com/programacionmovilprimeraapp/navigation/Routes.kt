@@ -27,5 +27,7 @@ sealed class Route: NavKey{
 
     @Serializable
     data class noteDetail(val id: String): Route()
+    @Serializable
+    data object account : Route()
 
 }

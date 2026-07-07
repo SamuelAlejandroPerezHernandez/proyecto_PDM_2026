@@ -6,6 +6,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.programacionmovilprimeraapp.MyApp
+import com.programacionmovilprimeraapp.features.account.AccountScreen
 import com.programacionmovilprimeraapp.features.home.home.Home
 import com.programacionmovilprimeraapp.features.auth.login.Login
 import com.programacionmovilprimeraapp.features.auth.register.Register
@@ -67,6 +68,31 @@ fun NavigationWrapper(){
 
                     goToNoteScreen = {
                         backStack.add(Route.noteList)
+                    },
+
+                    goToAccountScreen = {
+                        backStack.add(Route.account)
+                    }
+                )
+            }
+
+            entry<Route.account>{
+                AccountScreen(
+                    goToTaskScreen = {
+                        backStack.add(Route.taskList)
+                    },
+
+                    goToNoteScreen = {
+                        backStack.add(Route.noteList)
+                    },
+
+                    goToAccountScreen = {
+                        // ya estamos en cuenta, no hace falta navegar
+                    },
+
+                    goToLogin = {
+                        backStack.clear()
+                        backStack.add(Route.login)
                     }
                 )
             }
@@ -74,7 +100,7 @@ fun NavigationWrapper(){
             entry<Route.taskList>{
                 TaskList(
                     goToDetail = {
-                        id ->
+                            id ->
                         backStack.add(Route.taskDetail(id))
                     }
                 )
@@ -93,7 +119,7 @@ fun NavigationWrapper(){
             entry<Route.noteList>{
                 NoteList(
                     goToDetailNote = {
-                        id ->
+                            id ->
                         backStack.add(Route.noteDetail(id))
                     }
                 )

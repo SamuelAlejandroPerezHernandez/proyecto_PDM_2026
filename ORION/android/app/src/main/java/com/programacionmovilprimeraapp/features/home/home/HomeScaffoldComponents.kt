@@ -66,7 +66,8 @@ fun OrionTopBar(
 @Composable
 fun HomeBottomBar(
     goToTaskScreen: () -> Unit,
-    goToNoteScreen: () -> Unit
+    goToNoteScreen: () -> Unit,
+    goToAccountScreen: () -> Unit
 ){
     Box(
         modifier = Modifier
@@ -127,7 +128,7 @@ fun HomeBottomBar(
             }
 
             IconButton(
-                onClick = {},
+                onClick = { goToAccountScreen() },
                 modifier = Modifier
                     .size(30.dp)
             ){

@@ -28,7 +28,8 @@ object Categories{
 @Composable
 fun Home(
     goToTaskScreen: () -> Unit,
-    goToNoteScreen: () -> Unit
+    goToNoteScreen: () -> Unit,
+    goToAccountScreen: () -> Unit
 ){
 
     val viewModel: HomeViewModel = viewModel()
@@ -36,7 +37,7 @@ fun Home(
     val saveMessage by viewModel.savingMessage.collectAsState()
 
     val insertTask = {
-        categoryId: String, title: String, description: String, dueDate: String ->
+            categoryId: String, title: String, description: String, dueDate: String ->
         viewModel.InsertTask(categoryId, title, description, dueDate)
     }
 
@@ -48,7 +49,7 @@ fun Home(
     var categoryId by rememberSaveable() { mutableStateOf<String?>(null) }
 
     val categorySelected = {
-        category: String -> categoryId = category
+            category: String -> categoryId = category
     }
 
     val onDismiss = {
@@ -57,14 +58,14 @@ fun Home(
 
     Scaffold(
         topBar = { OrionTopBar() },
-        bottomBar = { HomeBottomBar(goToTaskScreen, goToNoteScreen) },
+        bottomBar = { HomeBottomBar(goToTaskScreen, goToNoteScreen, goToAccountScreen) },
         floatingActionButton = { TaskFloatingButtom(
             Categories.CATEGORIA_TAREAS,
             Categories.CATEGORIA_NOTAS,
             categorySelected,
         ) }
     ){
-        innerPadding ->
+            innerPadding ->
         HomeContent(innerPadding)
 
         if(categoryId != null){
