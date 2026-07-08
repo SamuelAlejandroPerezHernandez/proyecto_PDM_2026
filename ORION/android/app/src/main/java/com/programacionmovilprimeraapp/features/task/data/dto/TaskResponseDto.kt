@@ -30,3 +30,8 @@ data class TaskDto(
     @SerialName("updated_at") val updatedAt: String,
     @SerialName("category_id") val categoryId: String
 )
+
+@Serializable
+data class UpcomingTasksResponseDto(
+    val upcomingTasks: List<TaskDto>
+)

@@ -81,7 +81,7 @@ fun DialogDateSelector(
                             val milisegundos = CalendarState.selectedDateMillis
 
                             if(milisegundos != null){
-                                val formateador = SimpleDateFormat("yyyy-MM-dd'T'", Locale.getDefault())
+                                val formateador = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                                 formateador.timeZone = TimeZone.getTimeZone("UTC")
                                 calendarDate(formateador.format(Date(milisegundos)))
                             }

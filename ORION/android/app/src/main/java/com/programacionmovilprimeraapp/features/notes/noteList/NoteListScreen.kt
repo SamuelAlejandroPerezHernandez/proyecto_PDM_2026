@@ -39,7 +39,8 @@ fun NoteList(
     goToDetailNote: (String) -> Unit,
     goToHome: () -> Unit,
     goToTaskList: () -> Unit,
-    back: () -> Unit
+    back: () -> Unit,
+    goToPerfil: () -> Unit
 ){
     val viewModel: NoteListViewModel = viewModel()
     val NoteList by viewModel.noteList.collectAsState()
@@ -56,7 +57,7 @@ fun NoteList(
     }
 
     Scaffold(
-        topBar = { OrionTopBar(back) },
+        topBar = { OrionTopBar(back, goToPerfil) },
         bottomBar = { NoteListBottomBar(goToHome, goToTaskList) }
     ) {
             innerPadding ->

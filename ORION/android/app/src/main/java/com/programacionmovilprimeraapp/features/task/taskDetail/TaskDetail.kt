@@ -79,7 +79,8 @@ fun TaskDetailScreen(
     backToList: () -> Unit,
     goToHome: () -> Unit,
     goToTaskList: () -> Unit,
-    goToNoteList: () -> Unit
+    goToNoteList: () -> Unit,
+    goToPerfil: () -> Unit
 ){
     val viewModel: TaskDetailViewModel = viewModel()
     val task by viewModel.responseTaskModel.collectAsState()
@@ -110,7 +111,7 @@ fun TaskDetailScreen(
     }
 
     Scaffold(
-        topBar = { OrionTopBar(backToList) },
+        topBar = { OrionTopBar(backToList, goToPerfil) },
         bottomBar = { DetailBottomBar(goToHome, goToTaskList, goToNoteList) }
 
     ) {

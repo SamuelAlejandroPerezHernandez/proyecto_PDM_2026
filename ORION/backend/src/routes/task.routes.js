@@ -13,6 +13,8 @@ router.put('/update/:id', verificarToken , taskController.updateTask)
 
 router.delete('/delete/:id', verificarToken , taskController.deleteTask)
 
+router.get('/upcoming', verificarToken, taskController.getUpcomingTasks)
+
 module.exports = router 
 
 

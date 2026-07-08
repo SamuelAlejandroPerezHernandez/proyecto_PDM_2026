@@ -6,6 +6,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.programacionmovilprimeraapp.MyApp
+import com.programacionmovilprimeraapp.features.account.AccountScreen
 import com.programacionmovilprimeraapp.features.home.home.Home
 import com.programacionmovilprimeraapp.features.auth.login.Login
 import com.programacionmovilprimeraapp.features.auth.register.Register
@@ -67,6 +68,10 @@ fun NavigationWrapper(){
 
                     goToNoteScreen = {
                         backStack.add(Route.noteList)
+                    },
+
+                    goToPerfil = {
+                        backStack.add(Route.account)
                     }
                 )
             }
@@ -88,6 +93,10 @@ fun NavigationWrapper(){
 
                     goToNoteList = {
                         backStack.add(Route.noteList)
+                    },
+
+                    goToPerfil = {
+                        backStack.add(Route.account)
                     }
                 )
             }
@@ -110,6 +119,10 @@ fun NavigationWrapper(){
 
                     goToNoteList = {
                         backStack.add(Route.noteList)
+                    },
+
+                    goToPerfil = {
+                        backStack.add(Route.account)
                     }
                 )
             }
@@ -131,6 +144,10 @@ fun NavigationWrapper(){
 
                     back = {
                         backStack.removeLastOrNull()
+                    },
+
+                    goToPerfil = {
+                        backStack.add(Route.account)
                     }
                 )
             }
@@ -154,6 +171,35 @@ fun NavigationWrapper(){
                     back = {
                         backStack.removeLastOrNull()
                     },
+
+                    goToPerfil = {
+                        backStack.add(Route.account)
+                    }
+                )
+            }
+
+            entry<Route.account>{
+                AccountScreen(
+                    goToHome = {
+                        backStack.add(Route.home)
+                    },
+
+                    goToTaskList = {
+                        backStack.add(Route.taskList)
+                    },
+
+                    goToNoteList = {
+                        backStack.add(Route.noteList)
+                    },
+
+                    back = {
+                        backStack.removeLastOrNull()
+                    },
+
+                    goToLogin = {
+                        backStack.clear()
+                        backStack.add(Route.login)
+                    }
                 )
             }
         }

@@ -21,7 +21,7 @@ import com.programacionmovilprimeraapp.orionnotes.R
 @Composable
 fun NoteListBottomBar(
     goToHome: () -> Unit,
-    goToTaskList: () -> Unit,
+    goToTaskList: () -> Unit
 ){
     NavigationBar(
         containerColor = colorResource(id = R.color.carbonBlack),

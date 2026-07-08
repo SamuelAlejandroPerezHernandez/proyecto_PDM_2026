@@ -36,7 +36,8 @@ fun NoteDetailScreen(
     goToHome: () -> Unit,
     goToTaskList: () -> Unit,
     goToNoteList: () -> Unit,
-    back: () -> Unit
+    back: () -> Unit,
+    goToPerfil: () -> Unit
 ){
     val viewModel: NoteDetailViewModel = viewModel()
     val note by viewModel.responseNoteModel.collectAsState()
@@ -68,7 +69,7 @@ fun NoteDetailScreen(
     }
 
     Scaffold(
-        topBar = { OrionTopBar(back) },
+        topBar = { OrionTopBar(back, goToPerfil) },
         bottomBar = { DetailBottomBar(goToHome, goToTaskList, goToNoteList) }
 
     ) {

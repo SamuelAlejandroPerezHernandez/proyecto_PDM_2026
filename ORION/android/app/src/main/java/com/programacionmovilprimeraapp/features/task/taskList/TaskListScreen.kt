@@ -59,6 +59,7 @@ import com.programacionmovilprimeraapp.core.ui.components.LoadingContent
 import com.programacionmovilprimeraapp.core.ui.components.OrionTopBar
 import com.programacionmovilprimeraapp.orionnotes.R
 import com.programacionmovilprimeraapp.features.task.taskList.TaskListViewModel
+import com.programacionmovilprimeraapp.navigation.Route
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
@@ -68,7 +69,8 @@ fun TaskList(
     goToDetail: (String) -> Unit,
     back: () -> Unit,
     goToHome: () -> Unit,
-    goToNoteList: () -> Unit
+    goToNoteList: () -> Unit,
+    goToPerfil: () -> Unit
 ){
     val viewModel: TaskListViewModel = viewModel()
     val taskList by viewModel.taskList.collectAsState()
@@ -90,7 +92,7 @@ fun TaskList(
     }
 
     Scaffold(
-        topBar = { OrionTopBar(back) },
+        topBar = { OrionTopBar(back, goToPerfil) },
         bottomBar = { TaskListBottomBar(goToHome, goToNoteList) }
     ) {
         innerPadding ->

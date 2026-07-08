@@ -28,7 +28,8 @@ object Categories{
 @Composable
 fun Home(
     goToTaskScreen: () -> Unit,
-    goToNoteScreen: () -> Unit
+    goToNoteScreen: () -> Unit,
+    goToPerfil: () -> Unit
 ){
 
     val viewModel: HomeViewModel = viewModel()
@@ -56,7 +57,7 @@ fun Home(
     }
 
     Scaffold(
-        topBar = { HomeTopBar() },
+        topBar = { HomeTopBar(goToPerfil) },
         bottomBar = { HomeBottomBar(goToTaskScreen, goToNoteScreen) },
         floatingActionButton = { TaskFloatingButtom(
             Categories.CATEGORIA_TAREAS,

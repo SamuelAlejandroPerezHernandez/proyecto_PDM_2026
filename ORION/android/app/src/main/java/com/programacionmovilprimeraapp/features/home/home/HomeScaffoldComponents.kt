@@ -29,6 +29,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -44,14 +45,14 @@ import com.programacionmovilprimeraapp.orionnotes.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar(
-
+    goToPerfil: () -> Unit
 ){
     TopAppBar(
-        title = {},
+        title = { Text(text = "") },
 
         actions = {
             IconButton(
-                onClick = {},
+                onClick = {goToPerfil()},
                 modifier = Modifier
                     .size(40.dp)
             ){

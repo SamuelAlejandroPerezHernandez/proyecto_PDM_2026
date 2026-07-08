@@ -108,5 +108,31 @@ const deleteTask = async(req, res) => {
 
 }
 
-module.exports = { addTask, getTasksList, getTaskDetail, updateTask, deleteTask }
+const getUpcomingTasks = async (req, res) => {
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        // Se agrega .eq('is_completed', false) para que las tareas ya
+        // completadas no ocupen espacio en el limit(3) ni aparezcan en el
+        // widget: la idea es mostrar solo lo pendiente por hacer.
+        const { data: upcomingTasks, error } = await supabase
+            .from('task')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .eq('is_completed', false)
+            .gte('due_date', today)
+            .order('due_date', { ascending: true })
+            .limit(3);
+
+        if (error) {
+            console.error('ERROR SUPABASE UPCOMING_TASKS:', JSON.stringify(error, null, 2));
+            return res.status(500).json({ message: 'Error al obtener las tareas urgentes', detalle: error.message });
+        }
+
+        return res.status(200).json({ upcomingTasks });
+    } catch (err) {
+        return res.status(500).json({ message: 'Error en el servidor', error: err.message });
+    }
+};
+
+module.exports = { addTask, getTasksList, getTaskDetail, updateTask, deleteTask, getUpcomingTasks }
 

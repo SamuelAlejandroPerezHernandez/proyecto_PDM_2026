@@ -90,7 +90,8 @@ fun DetailBottomBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrionTopBar(
-    back: () -> Unit
+    back: () -> Unit,
+    goToPerfil: () -> Unit
 ){
     TopAppBar(
         title = {},
@@ -113,7 +114,7 @@ fun OrionTopBar(
 
         actions = {
             IconButton(
-                onClick = {},
+                onClick = {goToPerfil()},
                 modifier = Modifier
                     .size(40.dp)
             ){
