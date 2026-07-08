@@ -29,9 +29,6 @@ import androidx.glance.text.TextStyle
 import com.programacionmovilprimeraapp.MyApp
 import com.programacionmovilprimeraapp.features.task.data.repository.TaskRepositoryImp
 import com.programacionmovilprimeraapp.features.task.domain.model.TaskModel
-
-// Misma paleta usada en la pantalla "Mi cuenta", para que el widget se sienta
-// parte de la misma app y no una pieza suelta con estilo distinto.
 private val ScreenBackground = ColorProvider(day = Color(0xFFF4F2F6), night = Color(0xFFF4F2F6))
 private val CardBackground = ColorProvider(day = Color.White, night = Color.White)
 private val TitleColor = ColorProvider(day = Color(0xFF1C1B1F), night = Color(0xFF1C1B1F))

@@ -12,9 +12,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AccountViewModel : ViewModel() {
-
-    // Se reutilizan los mismos repositories de tareas y notas ya existentes,
-    // solo para leer las listas y contar cuántas tiene el usuario.
     private val taskRepository: TaskRepository = TaskRepositoryImp(MyApp.Companion.sessionManager)
     private val noteRepository: NoteRepositoryN = NoteRepositoryImp(MyApp.Companion.sessionManager)
 

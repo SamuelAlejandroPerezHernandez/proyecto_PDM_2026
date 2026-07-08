@@ -7,6 +7,8 @@ router.post('/postNotes', verificarToken, noteController.addNote)
 
 router.get('/getNotes', verificarToken, noteController.getNotesList)
 
+router.get('/recent', verificarToken, noteController.getRecentNotes)
+
 router.get('/detail/:id', verificarToken, noteController.getNoteDetail)
 
 router.put('/update/:id', verificarToken, noteController.updateNote)

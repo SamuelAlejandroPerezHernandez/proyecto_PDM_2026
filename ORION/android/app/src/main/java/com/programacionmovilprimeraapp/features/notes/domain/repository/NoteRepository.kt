@@ -8,12 +8,10 @@ import com.programacionmovilprimeraapp.features.notes.domain.model.NotesUpdateRe
 
 interface NoteRepositoryN{
     suspend fun createNote(request: NotesRequestModel): Result<NotesResponseModel>
-
     suspend fun getNote(): Result<List<NoteModel>>
-
     suspend fun getNoteDetail(id: String): Result<NoteDetailResponseModel>
-
     suspend fun updateNote(id: String, request: NotesUpdateRequestModel): Result<Unit>
-
     suspend fun deleteNote(id: String): Result<Unit>
+
+    suspend fun getRecentNotes(): Result<List<NoteModel>>
 }

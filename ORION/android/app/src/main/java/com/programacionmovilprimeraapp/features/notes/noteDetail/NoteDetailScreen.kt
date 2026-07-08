@@ -131,7 +131,6 @@ fun NoteDetailContent(
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        // Título
         item {
             Column {
                 Row(
@@ -164,7 +163,6 @@ fun NoteDetailContent(
             }
         }
 
-        // Contenido
         item {
             Column {
                 Row(
@@ -210,7 +208,6 @@ fun NoteDetailContent(
 
         item { Spacer(modifier = Modifier.height(8.dp)) }
 
-        // Botones de acción
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -28,3 +28,8 @@ data class NoteDto(
     @SerialName("update_at") val updatedAt: String,
     @SerialName("category_id") val categoryId: String
 )
+
+@Serializable
+data class RecentNotesResponseDto(
+    val recentNotes: List<NoteDto>
+)

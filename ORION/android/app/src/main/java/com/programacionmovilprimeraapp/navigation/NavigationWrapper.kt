@@ -72,6 +72,16 @@ fun NavigationWrapper(){
 
                     goToPerfil = {
                         backStack.add(Route.account)
+                    },
+
+                    goToTaskDetail = {
+                            id ->
+                        backStack.add(Route.taskDetail(id))
+                    },
+
+                    goToNoteDetail = {
+                            id ->
+                        backStack.add(Route.noteDetail(id))
                     }
                 )
             }
@@ -79,7 +89,7 @@ fun NavigationWrapper(){
             entry<Route.taskList>{
                 TaskList(
                     goToDetail = {
-                        id ->
+                            id ->
                         backStack.add(Route.taskDetail(id))
                     },
 
@@ -130,7 +140,7 @@ fun NavigationWrapper(){
             entry<Route.noteList>{
                 NoteList(
                     goToDetailNote = {
-                        id ->
+                            id ->
                         backStack.add(Route.noteDetail(id))
                     },
 

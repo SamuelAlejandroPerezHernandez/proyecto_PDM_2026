@@ -83,7 +83,7 @@ const updateNote = async(req, res) => {
         .single()
         
     if(error){
-        console.log("ERROR UPDATE NOTE:", error)   // 👈 agrega esto
+        console.log("ERROR UPDATE NOTE:", error)
         return res.status(500).json({message: 'error al intentar actualizar la nota'})
     }
 
@@ -102,11 +102,29 @@ const deleteNote = async(req, res) => {
         .single()
 
     if(error){
-        console.log("ERROR DELETE NOTE:", error)   // 👈 agrega esto
+        console.log("ERROR DELETE NOTE:", error)
         return res.status(500).json({message: 'error al intentar eliminar la nota'})
     }
 
     res.status(204).send()
 }
 
-module.exports = { addNote, getNotesList, getNoteDetail, updateNote, deleteNote }
+const getRecentNotes = async (req, res) => {
+    const { data: recentNotes, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', req.user.id)
+        .order('created_at', { ascending: false })
+        .limit(5)
+
+    if (error) {
+        console.log("ERROR GET RECENT NOTES:", error)
+        return res.status(500).json({ message: 'Error al intentar obtener las notas recientes' })
+    }
+
+    res.status(200).json({
+        recentNotes
+    })
+}
+
+module.exports = { addNote, getNotesList, getNoteDetail, updateNote, deleteNote, getRecentNotes }

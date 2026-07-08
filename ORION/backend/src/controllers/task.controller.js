@@ -111,9 +111,6 @@ const deleteTask = async(req, res) => {
 const getUpcomingTasks = async (req, res) => {
     try {
         const today = new Date().toISOString().split('T')[0];
-        // Se agrega .eq('is_completed', false) para que las tareas ya
-        // completadas no ocupen espacio en el limit(3) ni aparezcan en el
-        // widget: la idea es mostrar solo lo pendiente por hacer.
         const { data: upcomingTasks, error } = await supabase
             .from('task')
             .select('*')

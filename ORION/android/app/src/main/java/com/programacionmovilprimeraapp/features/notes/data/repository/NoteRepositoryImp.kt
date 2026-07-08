@@ -5,6 +5,7 @@ import com.programacionmovilprimeraapp.core.data.remote.KtorClient
 import com.programacionmovilprimeraapp.features.notes.data.dto.NoteDetailResponseDto
 import com.programacionmovilprimeraapp.features.notes.data.dto.NoteResponseListDto
 import com.programacionmovilprimeraapp.features.notes.data.dto.NotesResponseDto
+import com.programacionmovilprimeraapp.features.notes.data.dto.RecentNotesResponseDto
 import com.programacionmovilprimeraapp.features.notes.data.mapper.toNoteDetailResponseModel
 import com.programacionmovilprimeraapp.features.notes.data.mapper.toNoteModel
 import com.programacionmovilprimeraapp.features.notes.data.mapper.toNotesRequestDto
@@ -28,20 +29,18 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 
 class NoteRepositoryImp(private val sessionManager: SessionManager): NoteRepositoryN{
+
     override suspend fun createNote(request: NotesRequestModel): Result<NotesResponseModel> {
         return try{
             val request = request.toNotesRequestDto()
             val token = sessionManager.getToken()
-
             val response: NotesResponseDto = KtorClient.client
                 .post("/api/notes/postNotes"){
                     contentType(ContentType.Application.Json)
                     setBody(request)
-
                     header(HttpHeaders.Authorization, "Bearer ${token}")
                 }
                 .body()
-
             Result.success(
                 response.toNotesResponseModel()
             )
@@ -54,13 +53,11 @@ class NoteRepositoryImp(private val sessionManager: SessionManager): NoteReposit
     override suspend fun getNote(): Result<List<NoteModel>> {
         return try {
             val token = sessionManager.getToken()
-
             val response: NoteResponseListDto = KtorClient.client
                 .get("/api/notes/getNotes"){
                     header(HttpHeaders.Authorization, "Bearer ${token}")
                 }
                 .body()
-
             Result.success(
                 response.notesList.map { it.toNoteModel() }
             )
@@ -73,13 +70,11 @@ class NoteRepositoryImp(private val sessionManager: SessionManager): NoteReposit
     override suspend fun getNoteDetail(id: String): Result<NoteDetailResponseModel> {
         return try {
             val token = sessionManager.getToken()
-
             val response: NoteDetailResponseDto = KtorClient.client
                 .get("/api/notes/detail/${id}"){
                     header(HttpHeaders.Authorization, "Bearer ${token}")
                 }
                 .body()
-
             Result.success(
                 response.toNoteDetailResponseModel()
             )
@@ -87,21 +82,17 @@ class NoteRepositoryImp(private val sessionManager: SessionManager): NoteReposit
         catch (e: Exception){
             Result.failure(e)
         }
-
     }
 
     override suspend fun updateNote(id: String, request: NotesUpdateRequestModel): Result<Unit> {
         return try{
             val request = request.toUpdateNotesRequestDto()
             val token = sessionManager.getToken()
-
             KtorClient.client.put("/api/notes/update/${id}"){
-                    contentType(ContentType.Application.Json)
-                    setBody(request)
-
-                    header(HttpHeaders.Authorization, "Bearer ${token}")
-                }
-
+                contentType(ContentType.Application.Json)
+                setBody(request)
+                header(HttpHeaders.Authorization, "Bearer ${token}")
+            }
             Result.success(Unit)
         }
         catch (e: Exception){
@@ -112,12 +103,27 @@ class NoteRepositoryImp(private val sessionManager: SessionManager): NoteReposit
     override suspend fun deleteNote(id: String): Result<Unit> {
         return try{
             val token = sessionManager.getToken()
-
             KtorClient.client.delete("/api/notes/delete/${id}"){
                 header(HttpHeaders.Authorization, "Bearer ${token}")
             }
-
             Result.success(Unit)
+        }
+        catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getRecentNotes(): Result<List<NoteModel>> {
+        return try {
+            val token = sessionManager.getToken()
+            val response: RecentNotesResponseDto = KtorClient.client
+                .get("/api/notes/recent"){
+                    header(HttpHeaders.Authorization, "Bearer ${token}")
+                }
+                .body()
+            Result.success(
+                response.recentNotes.map { it.toNoteModel() }
+            )
         }
         catch (e: Exception){
             Result.failure(e)
