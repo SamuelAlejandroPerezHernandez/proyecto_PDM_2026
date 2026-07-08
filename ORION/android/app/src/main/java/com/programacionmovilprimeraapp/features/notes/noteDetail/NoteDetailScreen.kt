@@ -21,17 +21,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.programacionmovilprimeraapp.core.ui.components.DetailBottomBar
 import com.programacionmovilprimeraapp.core.ui.components.ErrorContent
 import com.programacionmovilprimeraapp.core.ui.components.LoadingContent
-import com.programacionmovilprimeraapp.features.home.home.OrionTopBar
+import com.programacionmovilprimeraapp.core.ui.components.OrionTopBar
+
 import com.programacionmovilprimeraapp.features.notes.domain.model.NoteDetailResponseModel
-import com.programacionmovilprimeraapp.features.task.taskDetail.TaskListBottomBar
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteDetailScreen(
     id: String,
-    backToNoteList: () -> Unit
+    goToHome: () -> Unit,
+    goToTaskList: () -> Unit,
+    goToNoteList: () -> Unit,
+    back: () -> Unit
 ){
     val viewModel: NoteDetailViewModel = viewModel()
     val note by viewModel.responseNoteModel.collectAsState()
@@ -63,8 +68,8 @@ fun NoteDetailScreen(
     }
 
     Scaffold(
-        topBar = { OrionTopBar() },
-        bottomBar = { TaskListBottomBar() }
+        topBar = { OrionTopBar(back) },
+        bottomBar = { DetailBottomBar(goToHome, goToTaskList, goToNoteList) }
 
     ) {
             innerPadding ->
@@ -82,7 +87,7 @@ fun NoteDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    NoteDetailContent(innerPadding, note, sheetStatus, delete, backToNoteList)
+                    NoteDetailContent(innerPadding, note, sheetStatus, delete, back)
 
                     if(onDimmisStatus != false){
                         NoteUpdatateBottomSheet(sheetStatus, note, update)
@@ -100,7 +105,7 @@ fun NoteDetailContent(
     note: NoteDetailResponseModel?,
     sheetStatus: (Boolean) -> Unit,
     delete: (String) -> Unit,
-    backToNoteList: () -> Unit
+    back: () -> Unit
 ){
     LazyColumn(
         modifier = Modifier
@@ -128,7 +133,7 @@ fun NoteDetailContent(
             Button(
                 onClick = {
                     delete(note?.noteDetail?.id?: "")
-                    backToNoteList()
+                    back()
                 }
             ) {
                 Text(text = "Eliminar")

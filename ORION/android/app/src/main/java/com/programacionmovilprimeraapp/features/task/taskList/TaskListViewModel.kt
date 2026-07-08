@@ -76,6 +76,16 @@ class TaskListViewModel(): ViewModel(){
     fun updateTaskStatus(id: String, isCompleted: Boolean){
         _saving.value = true
 
+        _TaskList.value = _TaskList.value.map {
+                task ->
+            if(task.id == id){
+                task.copy(isCompleted = isCompleted)
+            }
+            else {
+                task
+            }
+        }
+
         val updateRequest = TaskUpdateRequestModel(
             isCompleted = isCompleted
         )
@@ -84,10 +94,19 @@ class TaskListViewModel(): ViewModel(){
             repository.updateTask(id, updateRequest)
                 .onSuccess {
                     _savingMessage.value = "FELICIDADES COMPLETASTE LA TAREA"
-                    refreshingTasks()
                 }
                 .onFailure {
                     _savingMessage.value = "parece que hubo un error al intentar marcara la tarea como completa"
+
+                    _TaskList.value = _TaskList.value.map {
+                            task ->
+                        if(task.id == id){
+                            task.copy(isCompleted = isCompleted)
+                        }
+                        else {
+                            task
+                        }
+                    }
                 }
 
             _saving.value = false

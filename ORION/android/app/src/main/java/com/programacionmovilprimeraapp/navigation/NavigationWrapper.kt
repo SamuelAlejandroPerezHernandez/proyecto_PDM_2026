@@ -76,6 +76,18 @@ fun NavigationWrapper(){
                     goToDetail = {
                         id ->
                         backStack.add(Route.taskDetail(id))
+                    },
+
+                    back = {
+                        backStack.removeLastOrNull()
+                    },
+
+                    goToHome = {
+                        backStack.add(Route.home)
+                    },
+
+                    goToNoteList = {
+                        backStack.add(Route.noteList)
                     }
                 )
             }
@@ -86,6 +98,18 @@ fun NavigationWrapper(){
 
                     backToList = {
                         backStack.removeLastOrNull()
+                    },
+
+                    goToHome = {
+                        backStack.add(Route.home)
+                    },
+
+                    goToTaskList = {
+                        backStack.add(Route.taskList)
+                    },
+
+                    goToNoteList = {
+                        backStack.add(Route.noteList)
                     }
                 )
             }
@@ -95,6 +119,18 @@ fun NavigationWrapper(){
                     goToDetailNote = {
                         id ->
                         backStack.add(Route.noteDetail(id))
+                    },
+
+                    goToHome = {
+                        backStack.add(Route.home)
+                    },
+
+                    goToTaskList = {
+                        backStack.add(Route.taskList)
+                    },
+
+                    back = {
+                        backStack.removeLastOrNull()
                     }
                 )
             }
@@ -103,9 +139,21 @@ fun NavigationWrapper(){
                 NoteDetailScreen(
                     id = it.id,
 
-                    backToNoteList = {
+                    goToHome = {
+                        backStack.add(Route.home)
+                    },
+
+                    goToTaskList = {
+                        backStack.add(Route.taskList)
+                    },
+
+                    goToNoteList = {
+                        backStack.add(Route.noteList)
+                    },
+
+                    back = {
                         backStack.removeLastOrNull()
-                    }
+                    },
                 )
             }
         }

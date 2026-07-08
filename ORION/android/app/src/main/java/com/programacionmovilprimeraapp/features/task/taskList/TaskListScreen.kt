@@ -41,6 +41,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.LaunchedEffect
@@ -48,12 +49,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import com.programacionmovilprimeraapp.core.ui.components.ErrorContent
 import com.programacionmovilprimeraapp.core.ui.components.LoadingContent
-import com.programacionmovilprimeraapp.features.home.home.OrionTopBar
+import com.programacionmovilprimeraapp.core.ui.components.OrionTopBar
 import com.programacionmovilprimeraapp.orionnotes.R
 import com.programacionmovilprimeraapp.features.task.taskList.TaskListViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +65,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskList(
-    goToDetail: (String) -> Unit
+    goToDetail: (String) -> Unit,
+    back: () -> Unit,
+    goToHome: () -> Unit,
+    goToNoteList: () -> Unit
 ){
     val viewModel: TaskListViewModel = viewModel()
     val taskList by viewModel.taskList.collectAsState()
@@ -84,8 +90,8 @@ fun TaskList(
     }
 
     Scaffold(
-        topBar = { OrionTopBar() },
-        bottomBar = { TaskListBottomBar() }
+        topBar = { OrionTopBar(back) },
+        bottomBar = { TaskListBottomBar(goToHome, goToNoteList) }
     ) {
         innerPadding ->
         when{
@@ -122,48 +128,57 @@ fun TaskListContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding),
-        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ){
         items(taskList){
             task ->
 
             var checkStatus by rememberSaveable { mutableStateOf(task.isCompleted) }
 
-            if(task.isCompleted == false){
-                Card(
-                    onClick = { goToDetail(task.id) },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.carbonBlack)),
+            Card(
+                onClick = { goToDetail(task.id) },
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.carbonBlack)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer(alpha = if (task.isCompleted) 0.6f else 1f)
+            ) {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 18.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Absolute.SpaceBetween
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.Top
-                    ) {
+
+                    Text(text = task.title,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        maxLines = 2,
+                        textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
+                    )
 
 
-
-                        Text(text = task.title,
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp)
-
-
-                        Switch(
-                            checked = checkStatus,
-                            onCheckedChange = { change ->
-                                checkStatus = change
-                                update(task.id, change)
-                            }
+                    Switch(
+                        checked = checkStatus,
+                        onCheckedChange = { change ->
+                            checkStatus = change
+                            update(task.id, change)
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = colorResource(id = R.color.carbonBlack),
+                            checkedTrackColor = colorResource(id = R.color.coolSteal),
+                            uncheckedThumbColor = colorResource(id = R.color.pearlAqua),
+                            uncheckedTrackColor = colorResource(id = R.color.carbonBlack)
                         )
+                    )
 
-                    }
                 }
             }
         }
     }
 }
+

@@ -6,9 +6,14 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,11 +26,13 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Task
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -39,10 +46,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.programacionmovilprimeraapp.orionnotes.R
-
 
 @Composable
 fun TaskFloatingButtom(
@@ -189,7 +196,15 @@ fun TaskBottomSheet(
                     value = title,
                     onValueChange = { title = it},
                     label = { Text(text = " Ingrese El TItulo De La Tarea") },
-                    singleLine = true
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = colorResource(id = R.color.dustyGrape),
+                        unfocusedBorderColor = Color.LightGray,
+                        focusedLabelColor = colorResource(id = R.color.dustyGrape)
+                    )
                 )
             }
 
@@ -197,16 +212,37 @@ fun TaskBottomSheet(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it},
-                    label = { Text(text = " Ingrese La Descripcion De La Tarea") }
+                    label = { Text(text = " Ingrese La Descripcion De La Tarea") },
+                    minLines = 3,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = colorResource(id = R.color.dustyGrape),
+                        unfocusedBorderColor = Color.LightGray,
+                        focusedLabelColor = colorResource(id = R.color.dustyGrape))
                 )
             }
 
             item{
-                DialogDateSelector(calendarDate)
-            }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        DialogDateSelector(calendarDate)
+                    }
 
-            item{
-                DialogTimeSelector(ClockTime)
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        DialogTimeSelector(ClockTime)
+                    }
+                }
             }
 
             item{
@@ -217,15 +253,24 @@ fun TaskBottomSheet(
                             insertTask(categoryId, title, description, dueDate)
                         }
                         onDismiss()
-                    }
-                ) {
-                    Text(text = "Guardar")
-                }
-            }
+                    },
 
-            item {
-                saveMessage?.let {
-                    Text(text = it)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .height(56.dp),
+
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.dustyGrape)
+                    )
+                ) {
+                    Text(text = "Guardar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp))
                 }
             }
         }
@@ -252,14 +297,26 @@ fun NoteBottomSheet(
         sheetState = sheetState
     ) {
         LazyColumn(
-
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.white))
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ){
             item{
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it},
                     label = { Text(text = " Ingrese El TItulo De La Tarea") },
-                    singleLine = true
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = colorResource(id = R.color.dustyGrape),
+                        unfocusedBorderColor = Color.LightGray,
+                        focusedLabelColor = colorResource(id = R.color.dustyGrape)
+                    )
                 )
             }
 
@@ -267,7 +324,16 @@ fun NoteBottomSheet(
                 OutlinedTextField(
                     value = content,
                     onValueChange = { content = it},
-                    label = { Text(text = " Ingrese La Descripcion De La Tarea") }
+                    label = { Text(text = " Ingrese La Descripcion De La Tarea") },
+                    minLines = 3,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = colorResource(id = R.color.dustyGrape),
+                        unfocusedBorderColor = Color.LightGray,
+                        focusedLabelColor = colorResource(id = R.color.dustyGrape)
+                    )
                 )
             }
 
@@ -279,15 +345,24 @@ fun NoteBottomSheet(
                         }
 
                         onDismiss()
-                    }
-                ) {
-                    Text(text = "Guardar")
-                }
-            }
+                    },
 
-            item {
-                saveMessage?.let {
-                    Text(text = it)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .height(56.dp),
+
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.dustyGrape)
+                    )
+                ) {
+                    Text(text = "Guardar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp))
                 }
             }
         }

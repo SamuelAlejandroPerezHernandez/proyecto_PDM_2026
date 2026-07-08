@@ -29,15 +29,17 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.programacionmovilprimeraapp.core.ui.components.ErrorContent
 import com.programacionmovilprimeraapp.core.ui.components.LoadingContent
-import com.programacionmovilprimeraapp.features.home.home.OrionTopBar
+import com.programacionmovilprimeraapp.core.ui.components.OrionTopBar
 import com.programacionmovilprimeraapp.features.notes.domain.model.NoteModel
-import com.programacionmovilprimeraapp.features.task.taskList.TaskListBottomBar
 import com.programacionmovilprimeraapp.orionnotes.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteList(
-    goToDetailNote: (String) -> Unit
+    goToDetailNote: (String) -> Unit,
+    goToHome: () -> Unit,
+    goToTaskList: () -> Unit,
+    back: () -> Unit
 ){
     val viewModel: NoteListViewModel = viewModel()
     val NoteList by viewModel.noteList.collectAsState()
@@ -54,8 +56,8 @@ fun NoteList(
     }
 
     Scaffold(
-        topBar = { OrionTopBar() },
-        bottomBar = { TaskListBottomBar() }
+        topBar = { OrionTopBar(back) },
+        bottomBar = { NoteListBottomBar(goToHome, goToTaskList) }
     ) {
             innerPadding ->
         when{

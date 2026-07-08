@@ -56,7 +56,7 @@ fun Home(
     }
 
     Scaffold(
-        topBar = { OrionTopBar() },
+        topBar = { HomeTopBar() },
         bottomBar = { HomeBottomBar(goToTaskScreen, goToNoteScreen) },
         floatingActionButton = { TaskFloatingButtom(
             Categories.CATEGORIA_TAREAS,
