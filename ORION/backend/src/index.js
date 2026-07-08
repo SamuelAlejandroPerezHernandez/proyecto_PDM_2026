@@ -4,6 +4,7 @@ const authRoutes = require('./routes/auth.routes')
 const tasksRoutes = require('./routes/task.routes')
 const noteRoutes = require('./routes/note.routes')  
 const categoriesRoutes = require('./routes/categories.routes')
+const profileRoutes = require('./routes/perfil.routes')
 require('dotenv').config()
 
 const app = express()
@@ -24,6 +25,8 @@ app.use('/api/tasks', tasksRoutes)
 app.use('/api/notes', noteRoutes)
 
 app.use('/api/categories', categoriesRoutes)
+
+app.use('/api/profile', profileRoutes);
 
 app.listen(Port, '0.0.0.0', () => {
     console.log(`Servidor corriendo en el puerto ${Port}`)

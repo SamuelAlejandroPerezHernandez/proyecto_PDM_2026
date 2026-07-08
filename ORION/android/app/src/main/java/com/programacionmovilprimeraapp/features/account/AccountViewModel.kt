@@ -3,6 +3,8 @@ package com.programacionmovilprimeraapp.features.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programacionmovilprimeraapp.MyApp
+import com.programacionmovilprimeraapp.features.account.data.repository.ProfileRepositoryImp
+import com.programacionmovilprimeraapp.features.account.domain.repository.ProfileRepository
 import com.programacionmovilprimeraapp.features.notes.data.repository.NoteRepositoryImp
 import com.programacionmovilprimeraapp.features.notes.domain.repository.NoteRepositoryN
 import com.programacionmovilprimeraapp.features.task.data.repository.TaskRepositoryImp
@@ -14,6 +16,8 @@ import kotlinx.coroutines.launch
 class AccountViewModel : ViewModel() {
     private val taskRepository: TaskRepository = TaskRepositoryImp(MyApp.Companion.sessionManager)
     private val noteRepository: NoteRepositoryN = NoteRepositoryImp(MyApp.Companion.sessionManager)
+
+    private val profileRepository: ProfileRepository = ProfileRepositoryImp()
 
     private val _sessionClosed = MutableStateFlow(false)
     val sessionClosed = _sessionClosed.asStateFlow()
@@ -48,6 +52,10 @@ class AccountViewModel : ViewModel() {
 
             noteRepository.getNote()
                 .onSuccess { notes -> _noteCount.value = notes.size }
+                .onFailure { e -> _error.value = e.message }
+
+            profileRepository.getProfile()
+                .onSuccess { profile -> _email.value = profile.email }
                 .onFailure { e -> _error.value = e.message }
 
             _loading.value = false
