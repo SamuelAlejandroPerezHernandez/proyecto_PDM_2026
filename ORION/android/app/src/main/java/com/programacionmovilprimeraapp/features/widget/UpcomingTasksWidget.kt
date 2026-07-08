@@ -1,6 +1,11 @@
 package com.programacionmovilprimeraapp.features.widget
 
 import android.content.Context
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,15 +24,23 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.programacionmovilprimeraapp.MyApp
 import com.programacionmovilprimeraapp.features.task.data.repository.TaskRepositoryImp
+import com.programacionmovilprimeraapp.features.task.domain.model.TaskModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class UpcomingTasksWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val repository = TaskRepositoryImp(MyApp.sessionManager)
-        val result = repository.getUpcomingTasks()
 
         provideContent {
-            val tasks = result.getOrNull()
+            var resultState by remember { mutableStateOf<Result<List<TaskModel>>?>(null) }
+
+            LaunchedEffect(Unit) {
+                withContext(Dispatchers.IO) {
+                    resultState = repository.getUpcomingTasks()
+                }
+            }
 
             val backgroundColor = ColorProvider(day = Color(0xFF1E293B), night = Color(0xFF1E293B))
             val textColor = ColorProvider(day = Color.White, night = Color.White)
@@ -44,28 +57,40 @@ class UpcomingTasksWidget : GlanceAppWidget() {
                         fontWeight = FontWeight.Bold,
                         color = textColor,
                         fontSize = 16.sp
-                    )
+                    ),
+                    modifier = GlanceModifier.padding(bottom = 4.dp)
                 )
 
+                val currentResult = resultState
                 when {
-                    result.isFailure -> {
+                    currentResult == null -> {
                         Text(
-                            text = "Error: ${result.exceptionOrNull()?.message ?: "desconocido"}",
+                            text = "Cargando tareas...",
                             style = TextStyle(color = textColor)
                         )
                     }
-                    tasks.isNullOrEmpty() -> {
+                    currentResult.isFailure -> {
+                        val exception = currentResult.exceptionOrNull()
                         Text(
-                            text = "No tienes tareas próximas",
+                            text = "Error: ${exception?.localizedMessage ?: "Error de red"}",
                             style = TextStyle(color = textColor)
                         )
                     }
                     else -> {
-                        tasks.forEach { task ->
+                        val tasks = currentResult.getOrNull()
+                        if (tasks.isNullOrEmpty()) {
                             Text(
-                                text = "• ${task.title} — ${task.dueDate.take(10)}",
+                                text = "No tienes tareas próximas",
                                 style = TextStyle(color = textColor)
                             )
+                        } else {
+                            tasks.forEach { task ->
+                                Text(
+                                    text = "• ${task.title} — ${task.dueDate.take(10)}",
+                                    style = TextStyle(color = textColor),
+                                    modifier = GlanceModifier.padding(top = 2.dp)
+                                )
+                            }
                         }
                     }
                 }
